@@ -1,0 +1,144 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.1 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{nty/global//global/global}
+    \entry{anzarut2018}{inproceedings}{}
+      \name{author}{3}{}{%
+        {{un=0,uniquepart=base,hash=05fd4a063f6e079184e530d6c0c69384}{%
+           family={Anzarut},
+           familyi={A\bibinitperiod},
+           given={Michelle},
+           giveni={M\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=d8c18600b50f75a081909e16b2994996}{%
+           family={González},
+           familyi={G\bibinitperiod},
+           given={Luis\bibnamedelima Felipe},
+           giveni={L\bibinitperiod\bibinitdelim F\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=66c6c7ba02a7c6f793ea37c760d25c98}{%
+           family={Ortiz},
+           familyi={O\bibinitperiod},
+           given={María\bibnamedelima Teresa},
+           giveni={M\bibinitperiod\bibinitdelim T\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{organization}{1}{%
+        {Springer}%
+      }
+      \strng{namehash}{c6c3b4b6871b91b1899b839b3b32ad8b}
+      \strng{fullhash}{c6c3b4b6871b91b1899b839b3b32ad8b}
+      \strng{bibnamehash}{c6c3b4b6871b91b1899b839b3b32ad8b}
+      \strng{authorbibnamehash}{c6c3b4b6871b91b1899b839b3b32ad8b}
+      \strng{authornamehash}{c6c3b4b6871b91b1899b839b3b32ad8b}
+      \strng{authorfullhash}{c6c3b4b6871b91b1899b839b3b32ad8b}
+      \field{sortinit}{A}
+      \field{sortinithash}{a3dcedd53b04d1adfd5ac303ecd5e6fa}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{National Statistics Forum (FNE) and Latin-American Congress of Statistical Societies (CLATSE)}
+      \field{title}{A Heavy-Tailed Multilevel Mixture Model for the Quick Count in the Mexican Elections of 2018}
+      \field{year}{2018}
+      \field{pages}{1\bibrangedash 13}
+      \range{pages}{13}
+    \endentry
+    \entry{diluvi2018}{article}{}
+      \name{author}{3}{}{%
+        {{un=0,uniquepart=base,hash=6d65f4aef03d15ab1fbd0abd70dec6c9}{%
+           family={Di-Luvi},
+           familyi={D\bibinithyphendelim L\bibinitperiod},
+           given={Gian\bibnamedelima Carlo},
+           giveni={G\bibinitperiod\bibinitdelim C\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=d187c032926e4fee44b436eeabb35df0}{%
+           family={Orantes-Jordan},
+           familyi={O\bibinithyphendelim J\bibinitperiod},
+           given={Gerardo},
+           giveni={G\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=ef597d3901b5d92b8296bb1f3f1df07c}{%
+           family={Mendoza},
+           familyi={M\bibinitperiod},
+           given={Manuel},
+           giveni={M\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{2cb1738596b77828f0f43c03a2ce8841}
+      \strng{fullhash}{2cb1738596b77828f0f43c03a2ce8841}
+      \strng{bibnamehash}{2cb1738596b77828f0f43c03a2ce8841}
+      \strng{authorbibnamehash}{2cb1738596b77828f0f43c03a2ce8841}
+      \strng{authornamehash}{2cb1738596b77828f0f43c03a2ce8841}
+      \strng{authorfullhash}{2cb1738596b77828f0f43c03a2ce8841}
+      \field{sortinit}{L}
+      \field{sortinithash}{dad3efd0836470093a7b4a7bb756eb8c}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Laberintos \& Infinitoss}
+      \field{title}{Statistics in the 2018 Mexican General Election Quick Counts}
+      \field{volume}{48}
+      \field{year}{2018}
+      \field{pages}{29\bibrangedash 37}
+      \range{pages}{9}
+    \endentry
+    \entry{mendoza-nieto2016}{article}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=ef597d3901b5d92b8296bb1f3f1df07c}{%
+           family={Mendoza},
+           familyi={M\bibinitperiod},
+           given={Manuel},
+           giveni={M\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=cd32cc666fa684af23fda9e024a45d32}{%
+           family={Nieto-Barajas},
+           familyi={N\bibinithyphendelim B\bibinitperiod},
+           given={Luis\bibnamedelima E},
+           giveni={L\bibinitperiod\bibinitdelim E\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {Elsevier}%
+      }
+      \strng{namehash}{af6a4c95aba358e840e02c06dd2268ac}
+      \strng{fullhash}{af6a4c95aba358e840e02c06dd2268ac}
+      \strng{bibnamehash}{af6a4c95aba358e840e02c06dd2268ac}
+      \strng{authorbibnamehash}{af6a4c95aba358e840e02c06dd2268ac}
+      \strng{authornamehash}{af6a4c95aba358e840e02c06dd2268ac}
+      \strng{authorfullhash}{af6a4c95aba358e840e02c06dd2268ac}
+      \field{sortinit}{M}
+      \field{sortinithash}{2e5c2f51f7fa2d957f3206819bf86dc3}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Electoral Studies}
+      \field{title}{Quick Counts in the Mexican Presidential Elections: A Bayesian Approach}
+      \field{volume}{43}
+      \field{year}{2016}
+      \field{pages}{124\bibrangedash 132}
+      \range{pages}{9}
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+

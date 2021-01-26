@@ -1,0 +1,59 @@
+\documentclass[10pt]{article}
+\usepackage{../macros}
+
+% figures and bibliography
+%\usepackage[sorting=nyt,backend=biber,bibstyle=alphabetic,citestyle=alphabetic]{biblatex}
+\usepackage[backend=biber, citestyle=authoryear, natbib]{biblatex}
+\bibliography{../ref.bib}
+\graphicspath{{../fig/}}
+
+\usepackage{placeins}
+
+
+% set margins' lenghts %%%%%%
+\setlength{\oddsidemargin}{0.0 in}
+\setlength{\evensidemargin}{0.0 in}
+\setlength{\topmargin}{-0.6 in}
+\setlength{\textwidth}{6.5 in}
+\setlength{\textheight}{8.5 in}
+\setlength{\headsep}{0.75 in}
+\setlength{\parindent}{0 in}
+\setlength{\parskip}{0.1 in}
+
+
+
+
+
+
+\title{\vspace{-2cm}An efficient Bayesian model for estimating election results in Mexico}
+\author{Gian Carlo Di-Luvi}
+\date{}
+%\date{Department of Statistics \\
+%University of British Columbia \\
+%February 2021}
+
+
+
+
+\begin{document}
+
+\maketitle
+
+
+In Mexico, presidential and gubernatorial elections take place every six years. Mexico has a multi-party electoral system where the candidate that receives the largest amount of votes wins the election. Even though election results take around a week to be certified, in recent years there has been a widespread effort by government authorities to determine the winner of each election the day it takes place. For this purpose, a sample of polling stations is usually selected before the election and statistical estimates based on those polling stations are computed as the results become available on election day---a process called a \textit{quick count}.
+\\
+
+Multiple Bayesian models have been used in Mexico's quick counts. \citet{mendoza-nieto2016} proposed simple Bayesian model to estimate the proportion of votes received by each candidate. The model was successfully used to predict the winners of the 2006 and 2012 elections; \citet{diluvi2018} proposed some modifications to the model and used it to predict the winner of the 2018 election. \citet{anzarut2018} proposed another (more complex) Bayesian model, and used it in the 2018 election as well.
+\\
+
+
+The main idea behind all these Bayesian models is to calculate the posterior distribution of the proportion of votes that each candidate receives given the available voting data. Data from the polling stations arrive as field personnel finish counting the votes, which \textit{(i)} depends on weather and geographical location and \textit{(ii)} means that model learning should be done expeditiously and online. Point \textit{(i)} means that models should be able to perform estimation in the presence of data that are missing not at random. The model in \citep{anzarut2018} accounts for this fact but is computationally expensive---for the presidential election, it took well over 5 minutes to run. On the other hand, although the models proposed by \citep{mendoza-nieto2016, diluvi2018} are trivially fast to learn, they fail to account for missing patterns in the data. Furthermore, all models assume that the proportions of votes received by candidates are independent, which is not correct and can lead to bias in estimates.
+\\
+
+Paragraph on proposed model. Dependence structure and missing data handling while being computationally efficient.
+
+
+\clearpage
+\printbibliography
+
+\end{document}

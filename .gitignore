@@ -71,3 +71,6 @@ po/*~
 # no data for now
 *.csv
 *.xlsx
+
+# no papers
+misc/papers/
