@@ -9,15 +9,6 @@ ggplot2::theme_set(theme_classic)
 
 ### FUNCTIONS ####
 
-# full sample nominal list
-nominal_list <- read_csv("../data/4-ConteoRapido18MUESTRA-ELECCION-PRESIDENCIAL.csv") %>% 
-  dplyr::select(ID_ESTRATO_F, LISTA_NOMINAL) %>% 
-  dplyr::group_by(ID_ESTRATO_F) %>% 
-  dplyr::summarise(LISTA_NOMINAL = sum(LISTA_NOMINAL))
-
-
-
-
 rposterior <- function(R, votes, nl){
   # generate R samples from the posterior in a given stratum
   # votes is a vector with votes for candidate in each polling station of the stratum
@@ -42,10 +33,11 @@ bayes_fit_stratum <- function(db, R = 10000){
   # returns a tibble with R samples from the posterior of theta, or from the prior if c < 2
   
   # calculate stratum size
-  c <- nrow(db %>% dplyr::filter(LISTA_NOMINAL != NE))
+  c <- nrow(db %>% dplyr::filter(TOTAL != 0))
   
   # if only zero or one polling station, sample from prior
   if(c < 2){
+    # if only 1 or no rows have info, sample from prior
     out <- tibble(RAC = rbeta(R, shape1 = 0.1, shape2 = 0.1*((4/0.6456) - 1)),
                   JAMK = rbeta(R, shape1 = 0.1, shape2 = 0.1*((4/0.6456) - 1)),
                   AMLO = rbeta(R, shape1 = 0.1, shape2 = 0.1*((4/0.6456) - 1)),
@@ -53,12 +45,17 @@ bayes_fit_stratum <- function(db, R = 10000){
                   OTROS = rbeta(R, shape1 = 0.1, shape2 = 4.9),
                   NE = rbeta(R, shape1 = 0.1, shape2 = 0.1*((1/0.3344) - 1)))
   }else{
-    out <- tibble(RAC = rposterior(R, db$RAC, db$LISTA_NOMINAL),
-                  JAMK = rposterior(R, db$JAMK, db$LISTA_NOMINAL),
-                  AMLO = rposterior(R, db$AMLO, db$LISTA_NOMINAL),
-                  JHRC = rposterior(R, db$JHRC, db$LISTA_NOMINAL),
-                  OTROS = rposterior(R, db$OTROS, db$LISTA_NOMINAL),
-                  NE = rposterior(R, db$NE, db$LISTA_NOMINAL))
+    # get only rows with information
+    tmp_db <- db %>% 
+      dplyr::filter(TOTAL != 0)
+    
+    # sample from posterior
+    out <- tibble(RAC = rposterior(R, tmp_db$RAC, tmp_db$LISTA_NOMINAL),
+                  JAMK = rposterior(R, tmp_db$JAMK, tmp_db$LISTA_NOMINAL),
+                  AMLO = rposterior(R, tmp_db$AMLO, tmp_db$LISTA_NOMINAL),
+                  JHRC = rposterior(R, tmp_db$JHRC, tmp_db$LISTA_NOMINAL),
+                  OTROS = rposterior(R, tmp_db$OTROS, tmp_db$LISTA_NOMINAL),
+                  NE = rposterior(R, tmp_db$NE, tmp_db$LISTA_NOMINAL))
   }
   #View(out)
   return(out)
@@ -97,21 +94,22 @@ bayes_fit_original <- function(db_name, R = 10000){
   no_special <- nrow(full) - special
   full <- full %>% 
     dplyr::mutate(LISTA_NOMINAL = ifelse(TIPO_CASILLA == "S", LISTA_NOMINAL, LISTA_NOMINAL - 750 * special / no_special))
+
   
-  out <- full
-  View(out)
+  # read full sample nominal list
+  nominal_list <- read_csv("../data/4-ConteoRapido18MUESTRA-ELECCION-PRESIDENCIAL.csv") %>% 
+    dplyr::select(ID_ESTRATO_F, LISTA_NOMINAL) %>% 
+    dplyr::group_by(ID_ESTRATO_F) %>% 
+    dplyr::summarise(LISTA_NOMINAL = sum(LISTA_NOMINAL)) %>% 
+    dplyr::mutate(weight = LISTA_NOMINAL / sum(LISTA_NOMINAL))
   
   # get total nominal list size
   N <- sum(nominal_list$LISTA_NOMINAL) # total nominal list
-  nominal_list <- nominal_list %>% 
-    dplyr::mutate(weight = LISTA_NOMINAL / N)
   
   # fit model and compute estimates
   out <- full %>% 
     dplyr::group_by(ID_ESTRATO_F) %>% 
-    dplyr::group_modify(~ bayes_fit_stratum(.x, R)) #%>% # fit bayesian model to each stratum
-  View(out)
-  out <- out %>% 
+    dplyr::group_modify(~ bayes_fit_stratum(.x, R)) %>% # fit bayesian model to each stratum
     dplyr::mutate(id = 1:n()) %>% 
     dplyr::ungroup() %>% 
     dplyr::left_join(nominal_list) %>% 
@@ -132,12 +130,12 @@ bayes_fit_original <- function(db_name, R = 10000){
                   JHRC = JHRC / PART,
                   OTROS = OTROS / PART) %>% 
     dplyr::select(RAC, JAMK, AMLO, JHRC, OTROS, PART)
-    #View(out)
+    
   return(out)
 }
 
 
-###
+### RUN ####
 results <- bayes_fit_original("../data/remesas/REMESAS0100012230.txt")
 results %>%
   dplyr::summarise(across(where(is.numeric), mean))
