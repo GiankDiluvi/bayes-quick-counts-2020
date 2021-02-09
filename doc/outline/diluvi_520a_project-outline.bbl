@@ -21,24 +21,21 @@
   \datalist[entry]{nty/global//global/global}
     \entry{anzarut2018}{inproceedings}{}
       \name{author}{3}{}{%
-        {{un=0,uniquepart=base,hash=05fd4a063f6e079184e530d6c0c69384}{%
+        {{hash=05fd4a063f6e079184e530d6c0c69384}{%
            family={Anzarut},
            familyi={A\bibinitperiod},
            given={Michelle},
-           giveni={M\bibinitperiod},
-           givenun=0}}%
-        {{un=0,uniquepart=base,hash=d8c18600b50f75a081909e16b2994996}{%
+           giveni={M\bibinitperiod}}}%
+        {{hash=d8c18600b50f75a081909e16b2994996}{%
            family={González},
            familyi={G\bibinitperiod},
            given={Luis\bibnamedelima Felipe},
-           giveni={L\bibinitperiod\bibinitdelim F\bibinitperiod},
-           givenun=0}}%
-        {{un=0,uniquepart=base,hash=66c6c7ba02a7c6f793ea37c760d25c98}{%
+           giveni={L\bibinitperiod\bibinitdelim F\bibinitperiod}}}%
+        {{hash=66c6c7ba02a7c6f793ea37c760d25c98}{%
            family={Ortiz},
            familyi={O\bibinitperiod},
            given={María\bibnamedelima Teresa},
-           giveni={M\bibinitperiod\bibinitdelim T\bibinitperiod},
-           givenun=0}}%
+           giveni={M\bibinitperiod\bibinitdelim T\bibinitperiod}}}%
       }
       \list{organization}{1}{%
         {Springer}%
@@ -51,8 +48,6 @@
       \strng{authorfullhash}{c6c3b4b6871b91b1899b839b3b32ad8b}
       \field{sortinit}{A}
       \field{sortinithash}{a3dcedd53b04d1adfd5ac303ecd5e6fa}
-      \field{extradatescope}{labelyear}
-      \field{labeldatesource}{year}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{booktitle}{National Statistics Forum (FNE) and Latin-American Congress of Statistical Societies (CLATSE)}
@@ -63,24 +58,21 @@
     \endentry
     \entry{diluvi2018}{article}{}
       \name{author}{3}{}{%
-        {{un=0,uniquepart=base,hash=6d65f4aef03d15ab1fbd0abd70dec6c9}{%
+        {{hash=6d65f4aef03d15ab1fbd0abd70dec6c9}{%
            family={Di-Luvi},
            familyi={D\bibinithyphendelim L\bibinitperiod},
            given={Gian\bibnamedelima Carlo},
-           giveni={G\bibinitperiod\bibinitdelim C\bibinitperiod},
-           givenun=0}}%
-        {{un=0,uniquepart=base,hash=d187c032926e4fee44b436eeabb35df0}{%
+           giveni={G\bibinitperiod\bibinitdelim C\bibinitperiod}}}%
+        {{hash=d187c032926e4fee44b436eeabb35df0}{%
            family={Orantes-Jordan},
            familyi={O\bibinithyphendelim J\bibinitperiod},
            given={Gerardo},
-           giveni={G\bibinitperiod},
-           givenun=0}}%
-        {{un=0,uniquepart=base,hash=ef597d3901b5d92b8296bb1f3f1df07c}{%
+           giveni={G\bibinitperiod}}}%
+        {{hash=ef597d3901b5d92b8296bb1f3f1df07c}{%
            family={Mendoza},
            familyi={M\bibinitperiod},
            given={Manuel},
-           giveni={M\bibinitperiod},
-           givenun=0}}%
+           giveni={M\bibinitperiod}}}%
       }
       \strng{namehash}{2cb1738596b77828f0f43c03a2ce8841}
       \strng{fullhash}{2cb1738596b77828f0f43c03a2ce8841}
@@ -90,8 +82,6 @@
       \strng{authorfullhash}{2cb1738596b77828f0f43c03a2ce8841}
       \field{sortinit}{L}
       \field{sortinithash}{dad3efd0836470093a7b4a7bb756eb8c}
-      \field{extradatescope}{labelyear}
-      \field{labeldatesource}{year}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{journaltitle}{Laberintos \& Infinitoss}
@@ -103,18 +93,16 @@
     \endentry
     \entry{mendoza-nieto2016}{article}{}
       \name{author}{2}{}{%
-        {{un=0,uniquepart=base,hash=ef597d3901b5d92b8296bb1f3f1df07c}{%
+        {{hash=ef597d3901b5d92b8296bb1f3f1df07c}{%
            family={Mendoza},
            familyi={M\bibinitperiod},
            given={Manuel},
-           giveni={M\bibinitperiod},
-           givenun=0}}%
-        {{un=0,uniquepart=base,hash=cd32cc666fa684af23fda9e024a45d32}{%
+           giveni={M\bibinitperiod}}}%
+        {{hash=cd32cc666fa684af23fda9e024a45d32}{%
            family={Nieto-Barajas},
            familyi={N\bibinithyphendelim B\bibinitperiod},
            given={Luis\bibnamedelima E},
-           giveni={L\bibinitperiod\bibinitdelim E\bibinitperiod},
-           givenun=0}}%
+           giveni={L\bibinitperiod\bibinitdelim E\bibinitperiod}}}%
       }
       \list{publisher}{1}{%
         {Elsevier}%
@@ -127,8 +115,6 @@
       \strng{authorfullhash}{af6a4c95aba358e840e02c06dd2268ac}
       \field{sortinit}{M}
       \field{sortinithash}{2e5c2f51f7fa2d957f3206819bf86dc3}
-      \field{extradatescope}{labelyear}
-      \field{labeldatesource}{year}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{journaltitle}{Electoral Studies}
@@ -137,6 +123,32 @@
       \field{year}{2016}
       \field{pages}{124\bibrangedash 132}
       \range{pages}{9}
+    \endentry
+    \entry{rstan}{misc}{}
+      \name{author}{1}{}{%
+        {{hash=38cdaa762a62c2f6e7ff4a46c1ce1705}{%
+           family={{Stan Development Team}},
+           familyi={S\bibinitperiod}}}%
+      }
+      \strng{namehash}{38cdaa762a62c2f6e7ff4a46c1ce1705}
+      \strng{fullhash}{38cdaa762a62c2f6e7ff4a46c1ce1705}
+      \strng{bibnamehash}{38cdaa762a62c2f6e7ff4a46c1ce1705}
+      \strng{authorbibnamehash}{38cdaa762a62c2f6e7ff4a46c1ce1705}
+      \strng{authornamehash}{38cdaa762a62c2f6e7ff4a46c1ce1705}
+      \strng{authorfullhash}{38cdaa762a62c2f6e7ff4a46c1ce1705}
+      \field{sortinit}{S}
+      \field{sortinithash}{c319cff79d99c853d775f88277d4e45f}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{R package version 2.21.2}
+      \field{title}{{RStan}: the {R} interface to {Stan}}
+      \field{year}{2020}
+      \verb{urlraw}
+      \verb http://mc-stan.org/
+      \endverb
+      \verb{url}
+      \verb http://mc-stan.org/
+      \endverb
     \endentry
   \enddatalist
 \endrefsection

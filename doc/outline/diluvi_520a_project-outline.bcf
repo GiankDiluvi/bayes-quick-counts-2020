@@ -66,7 +66,7 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>labeldateparts</bcf:key>
-      <bcf:value>1</bcf:value>
+      <bcf:value>0</bcf:value>
     </bcf:option>
     <bcf:option type="multivalued">
       <bcf:key>labeldatespec</bcf:key>
@@ -171,11 +171,11 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>uniquelist</bcf:key>
-      <bcf:value>true</bcf:value>
+      <bcf:value>false</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>uniquename</bcf:key>
-      <bcf:value>full</bcf:value>
+      <bcf:value>false</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>uniqueprimaryauthor</bcf:key>
@@ -300,7 +300,7 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>labeldateparts</bcf:key>
-      <bcf:value>1</bcf:value>
+      <bcf:value>0</bcf:value>
     </bcf:option>
     <bcf:option type="multivalued">
       <bcf:key>labeldatespec</bcf:key>
@@ -381,11 +381,11 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>uniquelist</bcf:key>
-      <bcf:value>true</bcf:value>
+      <bcf:value>false</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>uniquename</bcf:key>
-      <bcf:value>full</bcf:value>
+      <bcf:value>false</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>uniqueprimaryauthor</bcf:key>
@@ -2351,11 +2351,15 @@
   </bcf:bibdata>
   <bcf:section number="0">
     <bcf:citekey order="1">mendoza-nieto2016</bcf:citekey>
-    <bcf:citekey order="2">diluvi2018</bcf:citekey>
-    <bcf:citekey order="3">anzarut2018</bcf:citekey>
-    <bcf:citekey order="4">anzarut2018</bcf:citekey>
-    <bcf:citekey order="5">mendoza-nieto2016</bcf:citekey>
-    <bcf:citekey order="5">diluvi2018</bcf:citekey>
+    <bcf:citekey order="2">mendoza-nieto2016</bcf:citekey>
+    <bcf:citekey order="3">diluvi2018</bcf:citekey>
+    <bcf:citekey order="4">diluvi2018</bcf:citekey>
+    <bcf:citekey order="5">anzarut2018</bcf:citekey>
+    <bcf:citekey order="6">anzarut2018</bcf:citekey>
+    <bcf:citekey order="7">anzarut2018</bcf:citekey>
+    <bcf:citekey order="8">mendoza-nieto2016</bcf:citekey>
+    <bcf:citekey order="8">diluvi2018</bcf:citekey>
+    <bcf:citekey order="9">rstan</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="nty">
