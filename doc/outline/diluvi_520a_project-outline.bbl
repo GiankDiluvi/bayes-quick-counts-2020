@@ -124,32 +124,6 @@
       \field{pages}{124\bibrangedash 132}
       \range{pages}{9}
     \endentry
-    \entry{rstan}{misc}{}
-      \name{author}{1}{}{%
-        {{hash=38cdaa762a62c2f6e7ff4a46c1ce1705}{%
-           family={{Stan Development Team}},
-           familyi={S\bibinitperiod}}}%
-      }
-      \strng{namehash}{38cdaa762a62c2f6e7ff4a46c1ce1705}
-      \strng{fullhash}{38cdaa762a62c2f6e7ff4a46c1ce1705}
-      \strng{bibnamehash}{38cdaa762a62c2f6e7ff4a46c1ce1705}
-      \strng{authorbibnamehash}{38cdaa762a62c2f6e7ff4a46c1ce1705}
-      \strng{authornamehash}{38cdaa762a62c2f6e7ff4a46c1ce1705}
-      \strng{authorfullhash}{38cdaa762a62c2f6e7ff4a46c1ce1705}
-      \field{sortinit}{S}
-      \field{sortinithash}{c319cff79d99c853d775f88277d4e45f}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{note}{R package version 2.21.2}
-      \field{title}{{RStan}: the {R} interface to {Stan}}
-      \field{year}{2020}
-      \verb{urlraw}
-      \verb http://mc-stan.org/
-      \endverb
-      \verb{url}
-      \verb http://mc-stan.org/
-      \endverb
-    \endentry
   \enddatalist
 \endrefsection
 \endinput

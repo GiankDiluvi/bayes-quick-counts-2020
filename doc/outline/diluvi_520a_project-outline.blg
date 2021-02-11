@@ -1,17 +1,17 @@
 [0] Config.pm:312> INFO - This is Biber 2.15
 [0] Config.pm:315> INFO - Logfile is 'diluvi_520a_project-outline.blg'
-[92] biber:330> INFO - === Tue Feb  9, 2021, 13:42:31
-[111] Biber.pm:415> INFO - Reading 'diluvi_520a_project-outline.bcf'
-[209] Biber.pm:952> INFO - Found 4 citekeys in bib section 0
-[226] Biber.pm:4334> INFO - Processing section 0
-[239] Biber.pm:4523> INFO - Looking for bibtex format file '../ref.bib' for section 0
-[240] bibtex.pm:1682> INFO - LaTeX decoding ...
-[259] bibtex.pm:1494> INFO - Found BibTeX data source '../ref.bib'
-[301] Utils.pm:395> WARN - BibTeX subsystem: warning: comma(s) at end of name (removing)
-[332] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
-[332] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
-[332] Biber.pm:4162> INFO - Sorting list 'nty/global//global/global' of type 'entry' with template 'nty' and locale 'en-US'
-[332] Biber.pm:4168> INFO - No sort tailoring available for locale 'en-US'
-[459] bbl.pm:651> INFO - Writing 'diluvi_520a_project-outline.bbl' with encoding 'UTF-8'
-[468] bbl.pm:754> INFO - Output to diluvi_520a_project-outline.bbl
-[469] Biber.pm:128> INFO - WARNINGS: 1
+[76] biber:330> INFO - === Thu Feb 11, 2021, 14:19:01
+[95] Biber.pm:415> INFO - Reading 'diluvi_520a_project-outline.bcf'
+[179] Biber.pm:952> INFO - Found 3 citekeys in bib section 0
+[194] Biber.pm:4334> INFO - Processing section 0
+[206] Biber.pm:4523> INFO - Looking for bibtex format file '../ref.bib' for section 0
+[207] bibtex.pm:1682> INFO - LaTeX decoding ...
+[224] bibtex.pm:1494> INFO - Found BibTeX data source '../ref.bib'
+[254] Utils.pm:395> WARN - BibTeX subsystem: warning: comma(s) at end of name (removing)
+[266] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[266] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
+[266] Biber.pm:4162> INFO - Sorting list 'nty/global//global/global' of type 'entry' with template 'nty' and locale 'en-US'
+[266] Biber.pm:4168> INFO - No sort tailoring available for locale 'en-US'
+[271] bbl.pm:651> INFO - Writing 'diluvi_520a_project-outline.bbl' with encoding 'UTF-8'
+[273] bbl.pm:754> INFO - Output to diluvi_520a_project-outline.bbl
+[273] Biber.pm:128> INFO - WARNINGS: 1

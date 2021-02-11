@@ -136,6 +136,6 @@ bayes_fit_original <- function(db_name, R = 10000){
 
 
 ### RUN ####
-#results <- bayes_fit_original("../data/remesas/REMESAS0100012230.txt")
-#results %>%
-#  dplyr::summarise(across(where(is.numeric), mean))
+results <- bayes_fit_original("../data/remesas/REMESAS0100012230.txt")
+results %>%
+  dplyr::summarise(across(where(is.numeric), mean))

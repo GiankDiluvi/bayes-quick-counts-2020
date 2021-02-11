@@ -9,57 +9,94 @@ ggplot2::theme_set(theme_classic)
 library(rstan)
 
 ### FUNCTIONS ####
-db_name <- "../data/remesas/REMESAS0100012230.txt"
+db_name <- "../data/remesas/REMESAS0100012330.txt"
 
 # Stan model for sampling from the posterior at each stratum
 model_stan <- "
   data {
     int<lower=0> c;          // number of polling stations 
-    matrix[c, 6] votes;      // votes matrix
+    vector[c] rac;
+    vector[c] jamk;
+    vector[c] amlo;
+    vector[c] jhrc;
+    vector[c] otros;
+    //vector[c] ne;
     vector[c] nl;            // nominal list
   }
   parameters {
-    vector[5] y;
-    corr_matrix[6] T;            // prior correlation
-    vector<lower=0>[6] tau;      // prior scale
-  }
-  transformed parameters {
-    vector[6] theta;             // init theta param
-    real Z;
+    //vector<lower=0, upper=1>[6] theta;
+    //vector<lower=0>[6] tau;      // prior scale
     
-    Z = 1 + sum(exp(y));         // normalizing constant
-    for (j in 1:5){
-    theta[j] = exp(y[j]) / Z;    // inv alr
-    }
-    theta[6] = 1 / Z;            // remaining theta
-     
-    
+    vector<lower=0, upper=1>[5] theta;
+    vector<lower=0>[5] tau;      // prior scale
   }
   model {
-    // settings for prior of theta
-    vector[5] mu;
-    real sigma1; // variance of candidates
-    real sigmaJ;     // variance of others
-    vector[5] diag;  // diagonal of covariance matrix
-    matrix[5, 5] sigma; // covariance matrix
-    
-    // now assign values
-    mu = [ -4, -4, -4, -4, -4 ]';
-    sigma1 = 2 * (log(0.6456/4) + 4);
-    sigmaJ = 2 * (log(0.02) + 4);
-    diag = [sigma1, sigma1, sigma1, sigma1, sigmaJ]';
-    sigma = diag_matrix(diag);
-    
     // priors
-    y ~ multi_normal(mu, sigma);
-    tau ~ cauchy(0, 2.5);
-    T ~ lkj_corr(1.0);
+    for (j in 1:4){
+    tau[j] ~ gamma(0.01, 0.01);
+    theta[j] ~ beta(0.1, 0.5195787);
+    }
+    
+    tau[5] ~ gamma(0.01, 0.01);
+    theta[5] ~ beta(0.1, 4.9);
+    
+    //tau[6] ~ gamma(0.01, 0.01);
+    //theta[6] ~ beta(0.1, 0.1990431);
     
     
     // model
     for (k in 1:c){
-    votes[k, 1:6] ~ multi_normal(nl[k] * theta, (1/sqrt(nl[k])) * quad_form_diag(T, tau));    // each polling station is normal
+    rac[k] ~ normal(nl[k] * theta[1], sqrt(tau[1] / nl[k]));
+    jamk[k] ~ normal(nl[k] * theta[2], sqrt(tau[2] / nl[k]));
+    amlo[k] ~ normal(nl[k] * theta[3], sqrt(tau[3] / nl[k]));
+    jhrc[k] ~ normal(nl[k] * theta[4], sqrt(tau[4] / nl[k]));
+    otros[k] ~ normal(nl[k] * theta[5], sqrt(tau[5] / nl[k]));
+    //ne[k] ~ normal(nl[k] * theta[6], sqrt(tau[6] / nl[k]));
     }
+  }
+  "
+
+
+model_stan <- "
+  data {
+    int<lower=0> c;          // number of polling stations 
+    vector[c] rac;
+    vector[c] jamk;
+    vector[c] amlo;
+    vector[c] jhrc;
+    vector[c] otros;
+    //vector[c] ne;
+    vector[c] nl;            // nominal list
+  }
+  parameters {
+    //vector<lower=0, upper=1>[6] theta;
+    //vector<lower=0>[6] tau;      // prior scale
+    
+    vector<lower=0, upper=1>[5] theta;
+    vector<lower=0>[5] tau;      // prior scale
+  }
+  model {
+    // priors
+    for (j in 1:4){
+    tau[j] ~ gamma(0.01, 0.01);
+    theta[j] ~ beta(0.1, 0.5195787);
+    }
+    
+    tau[5] ~ gamma(0.01, 0.01);
+    theta[5] ~ beta(0.1, 4.9);
+    
+    //tau[6] ~ gamma(0.01, 0.01);
+    //theta[6] ~ beta(0.1, 0.1990431);
+    
+    
+    // model
+    rac ~ multi_normal_prec(nl * theta[1], diag_matrix(nl / tau[1]));
+    jamk ~ multi_normal_prec(nl * theta[2], diag_matrix(nl / tau[2]));
+    amlo ~ multi_normal_prec(nl * theta[3], diag_matrix(nl / tau[3]));
+    jhrc ~ multi_normal_prec(nl * theta[4], diag_matrix(nl / tau[4]));
+    otros ~ multi_normal_prec(nl * theta[5], diag_matrix(nl / tau[5]));
+    
+  
   }
   "
 
@@ -73,19 +110,6 @@ bayes_model <- rstan::stan_model(model_code = model_stan)
 
 
 
-rposterior <- function(db, R = 1000, warmup = 1000, n_chains = 4){
-  # generate R samples from the posterior in a given stratum
-  # db contains the votes for each presidential candidate and the nominal list
-  # R is the number of iterations per chain
-  # warmup is the number of warmup iterations
-  # n_chains is the number of chains to run
-  #
-  # returns a RxJ tibble with samples from the posterior of the proportions of votes
-  
-  
-  
-  return(out)
-}
 
 
 #real rac[c];             // votes for rac
@@ -99,6 +123,7 @@ rposterior <- function(db, R = 1000, warmup = 1000, n_chains = 4){
 bayes_fit_stratum <- function(db, R = 1000, warmup = 250){
   # generate R samples from posterior or prior depending on number of polling stations with information
   # db is a data base with votes from all candidates in a give stratum
+  # stratum is used to print out stratum number
   #
   # returns a tibble with R samples from the posterior of theta, or from the prior if c < 2
   
@@ -115,35 +140,44 @@ bayes_fit_stratum <- function(db, R = 1000, warmup = 250){
                   JAMK = rbeta(R, shape1 = 0.1, shape2 = 0.1*((4/0.6456) - 1)),
                   AMLO = rbeta(R, shape1 = 0.1, shape2 = 0.1*((4/0.6456) - 1)),
                   JHRC = rbeta(R, shape1 = 0.1, shape2 = 0.1*((4/0.6456) - 1)),
-                  OTROS = rbeta(R, shape1 = 0.1, shape2 = 4.9),
-                  NE = rbeta(R, shape1 = 0.1, shape2 = 0.1*((1/0.3344) - 1)))
+                  OTROS = rbeta(R, shape1 = 0.1, shape2 = 4.9))
   }else{
     print('simulating from posterior')
     # get only rows with information
     tmp_db <- db %>% 
       dplyr::filter(TOTAL != 0)
     
+    votes <- tmp_db %>%
+      dplyr::select(RAC, JAMK, AMLO, JHRC, OTROS, NE) %>% 
+      as.matrix() %>% 
+      unname()
+    
     # sample from posterior
     stan_data <- list(
       c = nrow(tmp_db),
-      votes = tmp_db %>% dplyr::select(RAC, JAMK, AMLO, JHRC, OTROS, NE) %>% as.matrix() %>% unname(),
+      rac = votes[, 1],
+      jamk = votes[, 2],
+      amlo = votes[, 3],
+      jhrc = votes[, 4],
+      otros = votes[, 5],
       nl = tmp_db %>% pull(LISTA_NOMINAL)
     )
     
     result <- rstan::sampling(bayes_model, data = stan_data, 
-                              chains = 1, iter = R + warmup, warmup = warmup, cores = 8, 
-                              verbose = FALSE, show_messages = FALSE, refresh = 0)
+                              chains = 1, iter = R + warmup, warmup = warmup, cores = 8,
+                              verbose = FALSE, show_messages = FALSE, refresh=0)
     
     out <- as_tibble(as.data.frame(result)) %>% 
-      dplyr::select(`theta[1]`:`theta[6]`) %>% 
+      dplyr::select(`theta[1]`:`theta[5]`) %>% 
       dplyr::rename(RAC = `theta[1]`,
                     JAMK = `theta[2]`,
                     AMLO = `theta[3]`,
                     JHRC = `theta[4]`,
-                    OTROS = `theta[5]`,
-                    NE = `theta[6]`)
+                    OTROS = `theta[5]`)
   }
   #View(out)
+  #print('done')
+  #print(paste0('amlo mean: ', mean(out$AMLO  / (out$RAC + out$JAMK + out$AMLO + out$JHRC + out$OTROS))))
   return(out)
 }
 
@@ -185,6 +219,7 @@ bayes_fit_new <- function(db_name, R = 1000, warmup = 250){
   # read full sample nominal list
   nominal_list <- read_csv("../data/4-ConteoRapido18MUESTRA-ELECCION-PRESIDENCIAL.csv") %>% 
     dplyr::select(ID_ESTRATO_F, LISTA_NOMINAL) %>% 
+    dplyr::arrange(ID_ESTRATO_F) %>% 
     dplyr::group_by(ID_ESTRATO_F) %>% 
     dplyr::summarise(LISTA_NOMINAL = sum(LISTA_NOMINAL)) %>% 
     dplyr::mutate(weight = LISTA_NOMINAL / sum(LISTA_NOMINAL))
@@ -197,7 +232,7 @@ bayes_fit_new <- function(db_name, R = 1000, warmup = 250){
     dplyr::arrange(ID_ESTRATO_F) %>% 
     dplyr::mutate(stratum = ID_ESTRATO_F) %>% 
     dplyr::group_by(ID_ESTRATO_F) %>% 
-    dplyr::group_modify(~ bayes_fit_stratum(.x, R, warmup)) %>% # fit bayesian model to each stratum
+    dplyr::group_modify(~ bayes_fit_stratum(.x, R = 1000, warmup = 250)) %>% # fit bayesian model to each stratum
     dplyr::mutate(id = 1:n()) %>% 
     dplyr::ungroup() %>% 
     dplyr::left_join(nominal_list) %>% 
@@ -207,11 +242,9 @@ bayes_fit_new <- function(db_name, R = 1000, warmup = 250){
                      JAMK = weighted.mean(JAMK, weight, na.rm = TRUE),
                      AMLO = weighted.mean(AMLO, weight, na.rm = TRUE),
                      JHRC = weighted.mean(JHRC, weight, na.rm = TRUE),
-                     OTROS = weighted.mean(OTROS, weight, na.rm = TRUE),
-                     NE = weighted.mean(NE, weight, na.rm = TRUE)) %>% 
+                     OTROS = weighted.mean(OTROS, weight, na.rm = TRUE)) %>% 
     # compute voter turnout and lambdas
     dplyr::mutate(PART = RAC + JAMK + AMLO + JHRC + OTROS,
-                  TOTAL = PART + NE,
                   RAC = RAC / PART,
                   JAMK = JAMK / PART,
                   AMLO = AMLO / PART,
@@ -224,6 +257,6 @@ bayes_fit_new <- function(db_name, R = 1000, warmup = 250){
 
 
 ### RUN ####
-results <- bayes_fit_new("../data/remesas/REMESAS0100012230.txt", R = 250, warmup = 250)
+results <- bayes_fit_new("../data/remesas/REMESAS0100012230.txt", R = 1000, warmup = 250)
 results %>%
   dplyr::summarise(across(where(is.numeric), mean))
