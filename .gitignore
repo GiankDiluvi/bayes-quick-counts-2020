@@ -74,3 +74,6 @@ po/*~
 
 # no papers
 misc/papers/
+
+# no old code
+src/old/
