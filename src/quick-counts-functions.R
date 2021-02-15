@@ -418,9 +418,9 @@ model_stan_new <- "
 
 
 ### TEST ####
-db_name <- "../data/remesas/REMESAS0100011930.txt"
-bayes_model_original <- rstan::stan_model(model_code = model_stan_original)
-bayes_model_new <- rstan::stan_model(model_code = model_stan_new)
-results <- bayes_fit(db_name, R = 250, warmup = 250, model = 'new', verbose = 1, bayes_model = bayes_model_new)
-results %>%
-  dplyr::summarise(across(where(is.numeric), mean))
+#db_name <- "../data/remesas/REMESAS0100011930.txt"
+#bayes_model_original <- rstan::stan_model(model_code = model_stan_original)
+#bayes_model_new <- rstan::stan_model(model_code = model_stan_new)
+#results <- bayes_fit(db_name, R = 250, warmup = 250, model = 'new', verbose = 1, bayes_model = bayes_model_new)
+#results %>%
+#  dplyr::summarise(across(where(is.numeric), mean))
