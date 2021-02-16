@@ -82,7 +82,7 @@
 
 
 
-\section{Introduction}
+\section{Introduction} \label{sec:intro}
 
 
 In Mexico, presidential and gubernatorial elections take place every six years. Mexico has a multi-party electoral system where the candidate that receives the largest amount of votes wins the election. Background on Mexican democracy.
@@ -108,7 +108,7 @@ Data from the polling stations arrive as field personnel finish counting the vot
 In this work, we \textit{(i)} propose a new model that accounts for the correlation structure between candidates---something not done before---and compare the results with other models, specifically in the setting with small sample sizes; and \textit{(ii)} design and implement an MCMC procedure to sample from the correct posterior distribution in \citet{diluvi2018}'s model, and compare it with the ``wrong'' posterior originally used. Paper outline.
 
 
-\section{Background}
+\section{Background} \label{sec:background}
 
 
 Quick counts are organized by the Mexican Electoral Institute but carried out by a committee of statisticians. Each member of the committe proposes and implements a different model. On election day, each model is trained every 5 minutes when new information becomes available, and the results from all models are combined into a single interval per candidate. When the committee decides that the sample is sufficiently large, the final combined intervals are reported to the government authorities. \\
@@ -138,7 +138,7 @@ where the sum is over all proper candidates (i.e. excluding $\theta_j$ correspon
 \[
   X_{ij}^k \sim \distNorm \left( n_i^k \theta_{ij}, \frac{\tau_{ij}}{n_i^k} \right), \label{eq:original_likelihood}
 \]
-where $\tau_{ij}$ is a precision parameter.\footnote{Although $\frac{\tau_{ij}}{n_i^k}$ corresponds to the variance of the distribution.} Observe that the number of votes are assumed to be independent between candidates. This is innacurate because, at each polling station, the total votes should add up to the known number of registered voters, $n_i^k$. (Hence the importance of including uncast votes within $j$.) \citet{mendoza-nieto2016} acknowledge this issue but argue that including a correlation structure, although correct in theory, produces small improvements in accuracy. \\
+where $\tau_{ij}$ is a precision parameter.\footnote{Although $\frac{\tau_{ij}}{n_i^k}$ corresponds to the variance of the distribution.} Observe that the number of votes are assumed to be independent between candidates. This is inaccurate because, at each polling station, the total votes should add up to the known number of registered voters, $n_i^k$. (Hence the importance of including uncast votes within $j$.) \citet{mendoza-nieto2016} acknowledge this issue but argue that including a correlation structure, although correct in theory, produces small improvements in accuracy. \\
 
 
 Because the quick counts are organized by governmental authorities, prior distributions should assign the same likelihood of winning to each candidate. \citet{mendoza-nieto2016} use uniform distributions for $\theta_{ij}$ and an independent improper prior for $\tau_{ij}$. With these, the posterior distribution after observing the information from $c_i$ polling stations in stratum $i$ has a closed form, namely
@@ -146,7 +146,7 @@ Because the quick counts are organized by governmental authorities, prior distri
   p(\theta_{ij}, \tau_{ij} \given X_{ij}^1, ..., X_{ij}^{c_i}) \propto \; &\distNorm \left(\theta_{ij} \; \Bigg\vert \; \frac{ \sum_{k=1}^{c_i} x_{ij}^{k} }{ \sum_{k=1}^{c_i} n_{i}^{k} }, \; \tau_{ij} \sum_{k=1}^{c_i} n_{i}^{k}  \right) \, \mathds{1}(0 < \theta_{ij} < 1) \\
     &\times \distGamma \left( \tau_{ij} \; \Bigg\vert \; \frac{c_{i} - 1}{2}, \; \frac{1}{2} \left\{ \sum_{k=1}^{c_i} \frac{ (x_{ij}^{k})^2 }{ n_{i}^{k} } - \frac{ \left( \sum_{k=1}^{c_i} x_{ij}^{k} \right)^2 }{ \sum_{k=1}^{c_i} n_{i}^{k} } \right\} \right).
 \]
-Sampling from Eqn. \refeq{eq:original_posterior} can be done expeditiously for each stratum---there is no need to run an MCMC scheme. Samples from all strata are then combined via Eqns. \refeq{eq:thetaj} and \refeq{eq:lambdaj} to obtain the national estimates for each candidates. \\
+Sampling from Eqn. \refeq{eq:original_posterior} can be done expeditiously for each stratum---there is no need to run an MCMC scheme. Samples from all strata are then combined via Eqns. \refeq{eq:thetaj} and \refeq{eq:lambdaj} to obtain the national estimates for each candidate. \\
 
 Because data arrive as field officers finish counting the votes, oftentimes entire strata in the sample have no information available. In those strata, \citet{mendoza-nieto2016} sample from the prior distribution---which is the probability distribution that describes the uncertainty in the latent variables. However, because all candidates are assumed independent and $(\theta_{i1}, ..., \theta_{iJ})^\top$ is not constrained to add up to 1, it is possible that the estimated voter turnout exceeds 100\% in some strata. This in turn affects the national voter turnout estimte, which overestimates the true voter turnout. \\
 
@@ -154,7 +154,7 @@ To remedy this, \citet{diluvi2018} proposed new prior distributions for $\theta_
 
 
 
-\section{Modeling the correlation structure}
+\section{Modeling proportions in the simplex} \label{sec:model}
 
 
 To design a Bayesian model correctly addresses the estimation of voter turnout, we first write the likelihood of votes in each stratum in Eqn. \refeq{eq:original_likelihood} as a multivariate Normal distribution. Specifically, letting $X_i^k = (X_{i1}^k,..., X_{iJ}^k)^\top$ and $\theta_i = (\theta_{i1}, ..., \theta_{iJ})^\top$, Eqn. \refeq{eq:original_likelihood} is equivalent to
@@ -181,7 +181,7 @@ To design a prior distribution for $\theta_i$, observe that the dimension of $\D
 \]
 $\mcA$ is known as the \textit{additive log-ratio} \citep{aitchison1982}, and its inverse is given by
 \[
-  \mcA^{-1} (x_1, ..., x_{J-1}) = \left( \frac{\exp(x_1)}{1 + \sum_{i=1}^{J-1} \exp(x_i)}, ..., \frac{\exp(x_{j-1})}{1 + \sum_{i=1}^{J-1} \exp(x_i)} \right)^\top.
+  \mcA^{-1} (x_1, ..., x_{J-1}) = \left( \frac{\exp(x_1)}{1 + \sum_{i=1}^{J-1} \exp(x_i)}, ..., \frac{\exp(x_{J-1})}{1 + \sum_{i=1}^{J-1} \exp(x_i)}, \frac{1}{1 + \sum_{i=1}^{J-1} \exp(x_i)} \right)^\top.
 \]
 The additive log-ratio transform is closely related to the center log-ratio transform, whose inverse is the popular softmax function. However, we choose to work with $\mcA$ because it is easier to interpret, and thus to define a prior on the transformed values. \\
 
@@ -204,10 +204,13 @@ For this purpose, we decompose $\Sigma_i^k = \diag(\sigma_1, ..., \sigma_J) P \d
 
 
 
-\section{Experiments}
+\section{Experiments} \label{sec:experiments}
 
 
-\section{Conclusion}
+We compare four different models: the one used by \citet{diluvi2018}, which contains modified priors but samples from the posterior in \citet{mendoza-nieto2016}; that same model but now sampling from the correct posterior via MCMC; the model proposed in Section \ref{sec:model} with the priors discussed therein; and the same model but assuming a trivial correlation structure, i.e., $P = I_J$. In this last model, the proportions of votes are forced to live in the probabilistic simplex but the correlation structure assumes a simple form, which results in faster sampling.
+
+
+\section{Conclusion} \label{sec:conclusion}
 
 
 

@@ -3,8 +3,7 @@
 ### PREAMBLE ####
 library(tidyverse)
 library(truncnorm)
-library(ggplot2)
-ggplot2::theme_set(theme_classic)
+library(mvtnorm)
 library(rstan)
 
 
@@ -50,7 +49,7 @@ bayes_fit <- function(db_name, R = 1000, warmup = 250, model = 'original', verbo
                    col_types = "cdddcdddddddddcddd") %>% 
     dplyr::mutate(ID = paste0(as.character(iD_ESTADO), as.character(ID_DISTRITO_FEDERAL), as.character(SECCION),
                               TIPO_CASILLA, as.character(ID_CASILLA), as.character(EXT_CONTIGUA), as.character(TIPO_SECCION))) %>% 
-    dplyr::left_join(db) %>% 
+    dplyr::left_join(db, by = c("ID" = "ID")) %>% 
     dplyr::select(ID, ID_ESTRATO_F, TIPO_CASILLA, LISTA_NOMINAL, RAC, JAMK, AMLO, JHRC, OTROS) %>% 
     dplyr::mutate(across(where(is.numeric), ~ ifelse(is.na(.), 0, .)),
                   LISTA_NOMINAL = ifelse(LISTA_NOMINAL == 0, 750, LISTA_NOMINAL),
@@ -83,11 +82,11 @@ bayes_fit <- function(db_name, R = 1000, warmup = 250, model = 'original', verbo
     dplyr::arrange(ID_ESTRATO_F) %>% 
     dplyr::mutate(stratum = ID_ESTRATO_F) %>% 
     dplyr::group_by(ID_ESTRATO_F) %>% 
-    dplyr::group_modify(~ bayes_fit_stratum(.x, R = 1000, warmup = 250, model = model,
+    dplyr::group_modify(~ bayes_fit_stratum(.x, R = R, warmup = warmup, model = model,
                                             bayes_model = bayes_model, verbose = verbose)) %>% # fit bayesian model to each stratum
     dplyr::mutate(id = 1:n()) %>% 
     dplyr::ungroup() %>% 
-    dplyr::left_join(nominal_list) %>% 
+    dplyr::left_join(nominal_list, by = c("ID_ESTRATO_F" = "ID_ESTRATO_F")) %>% 
     dplyr::group_by(id) %>% 
     # now compute national theta estimates
     dplyr::summarise(RAC = weighted.mean(RAC, weight, na.rm = TRUE),
@@ -125,6 +124,8 @@ bayes_fit_stratum <- function(db, R = 1000, warmup = 250, model = 'original', ba
   if(model == 'original_mcmc') out <- bayes_fit_stratum_original_mcmc(db, bayes_model, R, warmup, verbose)
   
   if(model == 'new') out <- bayes_fit_stratum_new(db, bayes_model, R, warmup, verbose)
+  
+  if(model == 'new_exp') out <- bayes_fit_stratum_new(db, bayes_model, R, warmup, verbose)
   
   return(out)
   
@@ -275,12 +276,8 @@ bayes_fit_stratum_new <- function(db, bayes_model, R = 1000, warmup = 250, verbo
   if(c < 2){
     if(verbose > 0) print('simulating from prior')
     # if only 1 or no rows have info, sample from prior
-    out <- tibble(RAC = rbeta(R, shape1 = 0.1, shape2 = 0.1*((4/0.6456) - 1)),
-                  JAMK = rbeta(R, shape1 = 0.1, shape2 = 0.1*((4/0.6456) - 1)),
-                  AMLO = rbeta(R, shape1 = 0.1, shape2 = 0.1*((4/0.6456) - 1)),
-                  JHRC = rbeta(R, shape1 = 0.1, shape2 = 0.1*((4/0.6456) - 1)),
-                  OTROS = rbeta(R, shape1 = 0.1, shape2 = 4.9),
-                  NE = rbeta(R, shape1 = 0.1, shape2 = 0.1*((1/0.3344) - 1)))
+    out <- rprior_new(R)
+    
   }else{
     if(verbose > 0) print('simulating from posterior')
     # get only rows with information
@@ -296,8 +293,9 @@ bayes_fit_stratum_new <- function(db, bayes_model, R = 1000, warmup = 250, verbo
     
     # sample from posterior
     result <- rstan::sampling(bayes_model, data = stan_data, 
-                              chains = 1, iter = R + warmup, warmup = warmup, cores = 8, 
+                              chains = 1, iter = R + warmup, warmup = warmup, cores = 1, 
                               verbose = FALSE, show_messages = FALSE, refresh = 0)
+    
     
     # retrieve samples from proportions
     out <- as_tibble(as.data.frame(result)) %>% 
@@ -308,12 +306,34 @@ bayes_fit_stratum_new <- function(db, bayes_model, R = 1000, warmup = 250, verbo
                     JHRC = `theta[4]`,
                     OTROS = `theta[5]`,
                     NE = `theta[6]`)
+    
+    #print(mean(rowSums(out[, 1:5])))
+    
   }
   
   
   return(out)
 }
 
+
+# TERTIARY FUNCTION
+rprior_new <- function(R){
+  # generate R samples from the new prior distribution
+  
+  mu1 <- log((0.6456/18)/(1-0.6456))
+  mu2 <- log((0.02 / 15)/(1-0.6456))
+  y <- mvtnorm::rmvnorm(100000, mean = c(mu1, mu1, mu1, mu1, mu2), sigma = diag(rep(10, 5)))
+  
+  sp1 <- rowSums(exp(y)) + 1
+  theta <- exp(y) / sp1
+  theta <- cbind(theta, 1/sp1)
+  #print(mean(rowSums(theta[, 1:5])))
+  colnames(theta) <- c('RAC', 'JAMK', 'AMLO', 'JHRC', 'OTROS', 'NE')
+  
+  return(as_tibble(theta))
+  
+  
+}
 
 
 ### STAN MODELS ####
@@ -390,17 +410,17 @@ model_stan_new <- "
   }
   model {
     // settings for prior of theta
+    real mu1;
+    real mu2;
     vector[5] mu;
-    real sigma1; // variance of candidates
-    real sigmaJ;     // variance of others
     vector[5] diag;  // diagonal of covariance matrix
     matrix[5, 5] sigma; // covariance matrix
     
     // now assign values
-    mu = [ -4, -4, -4, -4, -4 ]';
-    sigma1 = 2 * (log(0.6456/4) + 4);
-    sigmaJ = 2 * (log(0.02) + 4);
-    diag = [sigma1, sigma1, sigma1, sigma1, sigmaJ]';
+    mu1 = log((0.6456/18)/(1-0.6456));
+    mu2 = log((0.02 / 15)/(1-0.6456));
+    mu = [ mu1, mu1, mu1, mu1, mu2 ]';
+    diag = [10, 10, 10, 10, 10]';
     sigma = diag_matrix(diag);
     
     // priors
@@ -417,10 +437,67 @@ model_stan_new <- "
   "
 
 
+# new model
+model_stan_new_exp <- "
+  data {
+    int<lower=0> c;          // number of polling stations 
+    matrix[c, 6] votes;      // votes matrix
+    vector[c] nl;            // nominal list
+  }
+  parameters {
+    vector[5] y;
+    vector<lower=0>[6] tau;      // prior scale
+  }
+  transformed parameters {
+    simplex[6] theta;             // init theta param
+    real Z;
+    
+    Z = 1 + sum(exp(y));         // normalizing constant
+    for (j in 1:5){
+    theta[j] = exp(y[j]) / Z;    // inv alr
+    }
+    theta[6] = 1 / Z;            // remaining theta
+     
+    
+  }
+  model {
+    // settings for prior of theta
+    vector[5] mu;
+    real mu1;
+    real mu2;
+    vector[5] diag;  // diagonal of covariance matrix
+    matrix[5, 5] sigma; // covariance matrix
+    matrix[6, 6] T;            // prior correlation
+    
+    // now assign values
+    mu1 = log((0.6456/18)/(1-0.6456));
+    mu2 = log((0.02 / 15)/(1-0.6456));
+    mu = [ mu1, mu1, mu1, mu1, mu2 ]';
+    diag = [10, 10, 10, 10, 10]';
+    sigma = diag_matrix(diag);
+    T = diag_matrix([1, 1, 1, 1, 1, 1]');
+    
+    // priors
+    y ~ multi_normal(mu, sigma);
+    tau ~ cauchy(0, 2.5);
+    
+    
+    // model
+    for (k in 1:c){
+    votes[k, 1:6] ~ multi_normal(nl[k] * theta, (1/sqrt(nl[k])) * quad_form_diag(T, tau));    // each polling station is normal
+    }
+  }
+  "
+
+
 ### TEST ####
 #db_name <- "../data/remesas/REMESAS0100011930.txt"
 #bayes_model_original <- rstan::stan_model(model_code = model_stan_original)
-#bayes_model_new <- rstan::stan_model(model_code = model_stan_new)
-#results <- bayes_fit(db_name, R = 250, warmup = 250, model = 'new', verbose = 1, bayes_model = bayes_model_new)
-#results %>%
-#  dplyr::summarise(across(where(is.numeric), mean))
+bayes_model_new <- rstan::stan_model(model_code = model_stan_new)
+bayes_model_new_exp <- rstan::stan_model(model_code = model_stan_new_exp)
+results <- bayes_fit(db_name, R = 200, warmup = 250, model = 'new', verbose = 1, bayes_model = bayes_model_new)
+results %>%
+  dplyr::summarise(across(where(is.numeric), mean))
+
+hist(results$AMLO)
+hist(results$PART)

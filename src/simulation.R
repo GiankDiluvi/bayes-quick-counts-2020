@@ -4,26 +4,34 @@
 ### PREAMBLE ####
 library(tidyverse)
 library(truncnorm)
-library(ggplot2)
-ggplot2::theme_set(theme_classic)
 library(rstan)
 
 source('quick-counts-functions.R')
 
 ### DEFINE PARAMETERS
-db_names <- c("../data/remesas/REMESAS0100012230.txt")
-models <- c('original', 'original_mcmc', 'new')
+db_names <- c("../data/remesas/REMESAS0100011900.txt",
+              #"../data/remesas/REMESAS0100011905.txt",
+              #"../data/remesas/REMESAS0100011910.txt",
+              "../data/remesas/REMESAS0100011915.txt",
+              #"../data/remesas/REMESAS0100011920.txt",
+              #"../data/remesas/REMESAS0100011925.txt",
+              "../data/remesas/REMESAS0100011930.txt")
+models <- c('original', 'original_mcmc', 
+            #'new', 
+            'new_exp')
 reps <- 1
 save_file <- '../data/results/'
 
 # compile stan models
 bayes_model_original <- rstan::stan_model(model_code = model_stan_original)
 bayes_model_new <- rstan::stan_model(model_code = model_stan_new)
+bayes_model_new_exp <- rstan::stan_model(model_code = model_stan_new_exp)
 
 # individual sims parameters
 original_params = list(R = 10000, warmup = 0, verbose = 0, bayes_model = NULL)
 original_mcmc_params = list(R = 500, warmup = 250, verbose = 0, bayes_model = bayes_model_original)
 new_params = list(R = 250, warmup = 250, verbose = 0, bayes_model = bayes_model_new)
+new_exp_params = list(R = 250, warmup = 250, verbose = 0, bayes_model = bayes_model_new_exp)
 
 # SIMULATION ####
 
@@ -45,6 +53,7 @@ for(db_name in db_names){
     if(model == 'original') params <- original_params
     if(model == 'original_mcmc') params <- original_mcmc_params
     if(model == 'new') params <- new_params
+    if(model == 'new_exp') params <- new_exp_params
     
     for(i in reps){
       
@@ -71,3 +80,7 @@ for(db_name in db_names){
     }
   }
 }
+
+
+# save time
+readr::write_csv(times, path = paste0(save_file, 'times.csv'))
