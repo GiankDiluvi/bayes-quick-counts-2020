@@ -1,0 +1,40 @@
+\begin{thebibliography}{5}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Aitchison(1982)]{aitchison1982}
+J.~Aitchison.
+\newblock The statistical analysis of compositional data.
+\newblock \emph{Journal of the Royal Statistical Society. Series B
+  (Methodological)}, 44\penalty0 (2):\penalty0 139--177, 1982.
+
+\bibitem[Anzarut et~al.(2018)Anzarut, González, and Ortiz]{anzarut2018}
+M.~Anzarut, L.~F. González, and M.~T. Ortiz.
+\newblock A heavy-tailed multilevel mixture model for the quick count in the
+  mexican elections of 2018.
+\newblock In \emph{National Statistics Forum (FNE) and Latin-American Congress
+  of Statistical Societies (CLATSE)}, pages 1--13. Springer, 2018.
+
+\bibitem[Di-Luvi et~al.(2018)Di-Luvi, Orantes-Jordan, and Mendoza]{diluvi2018}
+G.~C. Di-Luvi, G.~Orantes-Jordan, and M.~Mendoza.
+\newblock Statistics in the 2018 mexican general election quick counts.
+\newblock \emph{Laberintos \& Infinitoss}, 48:\penalty0 29--37, 2018.
+
+\bibitem[Lewandowski et~al.(2009)Lewandowski, Kurowicka, and
+  Joe]{lewandowski2009}
+D.~Lewandowski, D.~Kurowicka, and H.~Joe.
+\newblock Generating random correlation matrices based on vines and extended
+  onion method.
+\newblock \emph{Journal of multivariate analysis}, 100\penalty0 (9):\penalty0
+  1989--2001, 2009.
+
+\bibitem[Mendoza and Nieto-Barajas(2016)]{mendoza-nieto2016}
+M.~Mendoza and L.~E. Nieto-Barajas.
+\newblock Quick counts in the mexican presidential elections: A bayesian
+  approach.
+\newblock \emph{Electoral Studies}, 43:\penalty0 124--132, 2016.
+
+\end{thebibliography}

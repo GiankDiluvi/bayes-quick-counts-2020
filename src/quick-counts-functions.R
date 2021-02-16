@@ -159,7 +159,7 @@ bayes_fit_stratum_original <- function(db, R = 10000, verbose = 0){
   #
   # returns a tibble with R samples from the posterior of theta, or from the prior if c < 2
   
-  print(paste0('stratum: ', as.character(unique(db$stratum))))
+  if(verbose > 0)  print(paste0('stratum: ', as.character(unique(db$stratum))))
   
   # calculate stratum size
   c <- nrow(db %>% dplyr::filter(TOTAL != 0))
@@ -202,7 +202,7 @@ bayes_fit_stratum_original_mcmc <- function(db, bayes_model, R = 1000, warmup = 
   #
   # returns a tibble with R samples from the posterior of theta, or from the prior if c < 2
   
-  print(paste0('stratum: ', as.character(unique(db$stratum))))
+  if(verbose > 0)  print(paste0('stratum: ', as.character(unique(db$stratum))))
   
   # calculate stratum size
   c <- nrow(db %>% dplyr::filter(TOTAL != 0))
@@ -266,7 +266,7 @@ bayes_fit_stratum_new <- function(db, bayes_model, R = 1000, warmup = 250, verbo
   #
   # returns a tibble with R samples from the posterior of theta, or from the prior if c < 2
   
-  print(paste0('stratum: ', as.character(unique(db$stratum))))
+  if(verbose > 0) print(paste0('stratum: ', as.character(unique(db$stratum))))
   
   # calculate stratum size
   c <- nrow(db %>% dplyr::filter(TOTAL != 0))
@@ -377,7 +377,7 @@ model_stan_new <- "
     vector<lower=0>[6] tau;      // prior scale
   }
   transformed parameters {
-    vector[6] theta;             // init theta param
+    simplex[6] theta;             // init theta param
     real Z;
     
     Z = 1 + sum(exp(y));         // normalizing constant
