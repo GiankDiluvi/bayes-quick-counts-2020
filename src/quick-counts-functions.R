@@ -127,6 +127,8 @@ bayes_fit_stratum <- function(db, R = 1000, warmup = 250, model = 'original', ba
   
   if(model == 'new_exp') out <- bayes_fit_stratum_new(db, bayes_model, R, warmup, verbose)
   
+  print('done sampling')
+  print(paste0('generated ', as.character(nrow(out)), ' samples'))
   return(out)
   
 }
@@ -322,7 +324,7 @@ rprior_new <- function(R){
   
   mu1 <- log((0.6456/18)/(1-0.6456))
   mu2 <- log((0.02 / 15)/(1-0.6456))
-  y <- mvtnorm::rmvnorm(100000, mean = c(mu1, mu1, mu1, mu1, mu2), sigma = diag(rep(10, 5)))
+  y <- mvtnorm::rmvnorm(R, mean = c(mu1, mu1, mu1, mu1, mu2), sigma = diag(rep(10, 5)))
   
   sp1 <- rowSums(exp(y)) + 1
   theta <- exp(y) / sp1
@@ -491,11 +493,11 @@ model_stan_new_exp <- "
 
 
 ### TEST ####
-#db_name <- "../data/remesas/REMESAS0100011930.txt"
-#bayes_model_original <- rstan::stan_model(model_code = model_stan_original)
+db_name <- "../data/remesas/REMESAS0100011930.txt"
+bayes_model_original <- rstan::stan_model(model_code = model_stan_original)
 bayes_model_new <- rstan::stan_model(model_code = model_stan_new)
 bayes_model_new_exp <- rstan::stan_model(model_code = model_stan_new_exp)
-results <- bayes_fit(db_name, R = 200, warmup = 250, model = 'new', verbose = 1, bayes_model = bayes_model_new)
+results <- bayes_fit(db_name, R = 200, warmup = 250, model = 'new_exp', verbose = 1, bayes_model = bayes_model_new_exp)
 results %>%
   dplyr::summarise(across(where(is.numeric), mean))
 
