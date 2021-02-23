@@ -493,7 +493,7 @@ model_stan_new_exp <- "
 
 
 ### TEST ####
-db_name <- "../data/remesas/REMESAS0100011930.txt"
+db_name <- "../data/remesas/REMESAS0100012230.txt"
 bayes_model_original <- rstan::stan_model(model_code = model_stan_original)
 bayes_model_new <- rstan::stan_model(model_code = model_stan_new)
 bayes_model_new_exp <- rstan::stan_model(model_code = model_stan_new_exp)
