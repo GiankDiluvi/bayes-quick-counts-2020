@@ -2,8 +2,10 @@
 
 # PREAMBLE ####
 library(tidyverse)
+library(stringr)
 library(ggplot2)
 ggplot2::theme_set(theme_classic())
+library(patchwork)
 
 
 # SETTINGS ####
@@ -62,12 +64,22 @@ for(date in dates){
 }
 
 
+db <- db %>% 
+  dplyr::mutate(model = ifelse(model == 'new_exp', 'new_simple',
+                               ifelse(model == 'new', 'new_complex', model)))
+
+times <- times %>% 
+  dplyr::mutate(model = ifelse(model == 'new_exp', 'new_simple',
+                               ifelse(model == 'new', 'new_complex', model)))
+
 # PLOT ####
 
 colors <- c("original" = viridis::viridis(20, option = "C")[1],
             "original_mcmc" = viridis::viridis(20, option = "D")[14],
-            "new" = viridis::viridis(20, option = "D")[19],
-            "new_exp" = viridis::viridis(20, option = "B")[15])
+            "new_complex" = viridis::viridis(20, option = "D")[19],
+            "new_simple" = viridis::viridis(20, option = "B")[15])
+text_size <- 24
+hour_format <- function(time) return(paste0(stringr::str_sub(time, 1, 2), ':', paste0(stringr::str_sub(time, 3, 4))))
 
 # distribution of amlo by model and date
 db %>% 
@@ -81,17 +93,23 @@ db %>%
 
 
 # distribution of amlo by model at 22:30pm
-db %>% 
+amlo_dist <- db %>% 
   dplyr::filter(candidate == 'AMLO', date == '2230') %>% 
   ggplot() +
   geom_density(aes(x = vote, fill = model),
                alpha = 0.4) +
   scale_color_manual(values = colors) +
-  scale_fill_manual(values = colors)
+  scale_fill_manual(values = colors) +
+  theme(text = element_text(size = text_size),
+        legend.position = "top") +
+  labs(x = expression(paste(theta[1], ' - AMLO')),
+       y = 'Posterior density',
+       color = 'Model: ',
+       fill = 'Model: ')
 
 
 # ribbon of amlo by model
-db %>% 
+amlo_ribbon <- db %>% 
   dplyr::filter(candidate == 'AMLO') %>% 
   dplyr::group_by(date, model) %>% 
   dplyr::summarise(lower = quantile(vote, 0.05),
@@ -104,15 +122,27 @@ db %>%
                   fill = model,
                   group = model,
                   color = model),
-              alpha = 0.3) +
+              alpha = 0.3, show.legend=FALSE) +
   geom_path(aes(x = date,
                 y = mean,
                 color = model,
                 group = model),
-            linetype = 2) +
+            linetype = 2, show.legend=FALSE) +
   scale_color_manual(values = colors) +
-  scale_fill_manual(values = colors)
+  scale_fill_manual(values = colors) +
+  scale_x_discrete(labels = hour_format) +
+  theme(text = element_text(size = text_size),
+        axis.text.x = element_text(angle = 45, hjust=1),
+        legend.position = "none") +
+  labs(x = "Time on election day",
+       y = expression(paste(theta[1], ' - AMLO')))
 
+
+# glue them
+combined <- amlo_dist + amlo_ribbon & theme(legend.position = "bottom")
+#combined <- amlo_dist + amlo_ribbon 
+combined + plot_layout(guides = "collect")
+ggsave('../doc/fig/amlo.pdf', width = 16)
 
 
 # distribution of voter turnout by model and date
@@ -128,17 +158,23 @@ db %>%
 
 
 # distribution of voter turnout by model at 22:30pm
-db %>% 
+part_dist <- db %>% 
   dplyr::filter(candidate == 'PART', date == '2230') %>% 
   ggplot() +
   geom_density(aes(x = vote, fill = model),
                alpha = 0.3)  +
   scale_color_manual(values = colors) +
-  scale_fill_manual(values = colors)
+  scale_fill_manual(values = colors) +
+  theme(text = element_text(size = text_size),
+        legend.position = "top") +
+  labs(x = expression(paste('Voter turnout ', rho)),
+       y = 'Density',
+       color = 'Model: ',
+       fill = 'Model: ')
 
 
 # ribbon of voter turnout by model
-db %>% 
+part_ribbon <- db %>% 
   dplyr::filter(candidate == 'PART') %>% 
   dplyr::group_by(date, model) %>% 
   dplyr::summarise(lower = quantile(vote, 0.05),
@@ -151,21 +187,43 @@ db %>%
                   fill = model,
                   group = model,
                   color = model),
-              alpha = 0.3) +
+              alpha = 0.3, show.legend=FALSE) +
   geom_path(aes(x = date,
                 y = mean,
                 color = model,
                 group = model),
-            linetype = 2) +
+            linetype = 2, show.legend=FALSE) +
   scale_color_manual(values = colors) +
-  scale_fill_manual(values = colors)
+  scale_fill_manual(values = colors) +
+  theme(text = element_text(size = text_size),
+        axis.text.x = element_text(angle = 45, hjust=1),
+        legend.position = "none") +
+  scale_x_discrete(labels = hour_format) +
+  labs(x = "Time on election day",
+       y = expression(paste('Voter turnout ', rho)))
 
+
+# glue them
+combined <- part_dist + part_ribbon  & theme(legend.position = "bottom")
+combined + plot_layout(guides = "collect")
+ggsave('../doc/fig/part.pdf', width = 16)
 
 # evolution of times by model
-times %>% 
-  dplyr::mutate(minutes= time_s / 60) %>% 
+times_plot <- times %>% 
+  dplyr::mutate(minutes= time_s / 60,
+                db_time = as.character(db_time)) %>% 
   ggplot() +
   geom_line(aes(x = db_time, y = minutes, group = model, color = model),
             size = 2) +
   geom_hline(yintercept = 5, color = "red", linetype = "dashed") +
-  scale_color_manual(values = colors)
+  scale_x_discrete(labels = hour_format) + 
+  scale_y_continuous(breaks = seq(0, 40, by = 5)) +
+  scale_color_manual(values = colors) +
+  labs(x = "Time on election day",
+       y = "Minutes to generate samples",
+       color = 'Model: ') +
+  theme(text = element_text(size = text_size),
+        axis.text.x = element_text(angle = 45, hjust=1),
+        legend.position = 'bottom')
+
+ggsave('../doc/fig/times.pdf', plot = times_plot, width = 10)
