@@ -15,19 +15,19 @@ db_names <- c("../data/remesas/REMESAS0100011900.txt",
               "../data/remesas/REMESAS0100011915.txt",
               #"../data/remesas/REMESAS0100011920.txt",
               #"../data/remesas/REMESAS0100011925.txt",
-              # "../data/remesas/REMESAS0100011930.txt",
-              # "../data/remesas/REMESAS0100011945.txt",
-              # "../data/remesas/REMESAS0100012000.txt",
-              # "../data/remesas/REMESAS0100012015.txt",
-              # "../data/remesas/REMESAS0100012030.txt",
-              # "../data/remesas/REMESAS0100012045.txt",
-              # "../data/remesas/REMESAS0100012100.txt",
-              # "../data/remesas/REMESAS0100012115.txt",
-              # "../data/remesas/REMESAS0100012130.txt",
-              # "../data/remesas/REMESAS0100012145.txt",
-              # "../data/remesas/REMESAS0100012200.txt",
-              # "../data/remesas/REMESAS0100012215.txt",
-              # "../data/remesas/REMESAS0100012230.txt"
+               "../data/remesas/REMESAS0100011930.txt",
+               "../data/remesas/REMESAS0100011945.txt",
+               "../data/remesas/REMESAS0100012000.txt",
+               "../data/remesas/REMESAS0100012015.txt",
+               "../data/remesas/REMESAS0100012030.txt",
+               "../data/remesas/REMESAS0100012045.txt",
+               "../data/remesas/REMESAS0100012100.txt",
+               "../data/remesas/REMESAS0100012115.txt",
+               "../data/remesas/REMESAS0100012130.txt",
+               "../data/remesas/REMESAS0100012145.txt",
+               "../data/remesas/REMESAS0100012200.txt",
+               "../data/remesas/REMESAS0100012215.txt",
+               "../data/remesas/REMESAS0100012230.txt"
               )
 models <- c('original', 'original_mcmc', 
             'new', 
@@ -99,4 +99,4 @@ for(db_name in db_names){
 readr::write_csv(times, path = paste0(save_file, 'times.csv'))
 
 deltat <- difftime(Sys.time(), t0, units = "secs")[[1]]
-print(paste0('simulation time: ', deltat))
+print(paste0('simulation time: ', round(deltat, 2), ' seconds'))

@@ -7,7 +7,21 @@ ggplot2::theme_set(theme_classic())
 
 
 # SETTINGS ####
-dates <- c('1900', '1915', '1930')
+dates <- c('1900',
+           '1915',
+           '1930',
+           '1945',
+           '2000',
+           '2015',
+           '2030',
+           '2045',
+           '2100',
+           '2115',
+           '2130',
+           '2145',
+           '2200',
+           '2215',
+           '2230')
 
 
 # IMPORT AND WRANGLE DATA ####
@@ -50,10 +64,10 @@ for(date in dates){
 
 # PLOT ####
 
-colors <- c("original" = "#3F4788FF",
-            "original_mcmc" = "#EF7F4FFF",
-            "new" = "#56147DFF",
-            "new_exp" = "Red")
+colors <- c("original" = viridis::viridis(20, option = "C")[1],
+            "original_mcmc" = viridis::viridis(20, option = "D")[14],
+            "new" = viridis::viridis(20, option = "D")[19],
+            "new_exp" = viridis::viridis(20, option = "B")[15])
 
 # distribution of amlo by model and date
 db %>% 
@@ -61,7 +75,19 @@ db %>%
   ggplot() +
   geom_density(aes(x = vote, fill = model),
                alpha = 0.3) +
-  facet_wrap(.~date, scales = 'free_y')
+  facet_wrap(.~date, scales = 'free_y') +
+  scale_color_manual(values = colors) +
+  scale_fill_manual(values = colors)
+
+
+# distribution of amlo by model at 22:30pm
+db %>% 
+  dplyr::filter(candidate == 'AMLO', date == '2230') %>% 
+  ggplot() +
+  geom_density(aes(x = vote, fill = model),
+               alpha = 0.4) +
+  scale_color_manual(values = colors) +
+  scale_fill_manual(values = colors)
 
 
 # ribbon of amlo by model
@@ -84,10 +110,8 @@ db %>%
                 color = model,
                 group = model),
             linetype = 2) +
-  #scale_color_manual(values = colors) +
-  #scale_fill_manual(values = colors)
-  scale_color_viridis_d() +
-  scale_fill_viridis_d()
+  scale_color_manual(values = colors) +
+  scale_fill_manual(values = colors)
 
 
 
@@ -97,7 +121,20 @@ db %>%
   ggplot() +
   geom_density(aes(x = vote, fill = model),
                alpha = 0.3) +
-  facet_wrap(.~date, scales = 'free_y')
+  facet_wrap(.~date, scales = 'free_y') +
+  scale_color_manual(values = colors) +
+  scale_fill_manual(values = colors)
+
+
+
+# distribution of voter turnout by model at 22:30pm
+db %>% 
+  dplyr::filter(candidate == 'PART', date == '2230') %>% 
+  ggplot() +
+  geom_density(aes(x = vote, fill = model),
+               alpha = 0.3)  +
+  scale_color_manual(values = colors) +
+  scale_fill_manual(values = colors)
 
 
 # ribbon of voter turnout by model
@@ -126,6 +163,9 @@ db %>%
 
 # evolution of times by model
 times %>% 
+  dplyr::mutate(minutes= time_s / 60) %>% 
   ggplot() +
-  geom_line(aes(x = db_time, y = time_s, group = model, color = model)) +
+  geom_line(aes(x = db_time, y = minutes, group = model, color = model),
+            size = 2) +
+  geom_hline(yintercept = 5, color = "red", linetype = "dashed") +
   scale_color_manual(values = colors)

@@ -127,8 +127,8 @@ bayes_fit_stratum <- function(db, R = 1000, warmup = 250, model = 'original', ba
   
   if(model == 'new_exp') out <- bayes_fit_stratum_new(db, bayes_model, R, warmup, verbose)
   
-  print('done sampling')
-  print(paste0('generated ', as.character(nrow(out)), ' samples'))
+  #print('done sampling')
+  #print(paste0('generated ', as.character(nrow(out)), ' samples'))
   return(out)
   
 }
@@ -493,13 +493,13 @@ model_stan_new_exp <- "
 
 
 ### TEST ####
-db_name <- "../data/remesas/REMESAS0100012230.txt"
-bayes_model_original <- rstan::stan_model(model_code = model_stan_original)
-bayes_model_new <- rstan::stan_model(model_code = model_stan_new)
-bayes_model_new_exp <- rstan::stan_model(model_code = model_stan_new_exp)
-results <- bayes_fit(db_name, R = 200, warmup = 250, model = 'new_exp', verbose = 1, bayes_model = bayes_model_new_exp)
-results %>%
-  dplyr::summarise(across(where(is.numeric), mean))
-
-hist(results$AMLO)
-hist(results$PART)
+# db_name <- "../data/remesas/REMESAS0100012230.txt"
+# bayes_model_original <- rstan::stan_model(model_code = model_stan_original)
+# bayes_model_new <- rstan::stan_model(model_code = model_stan_new)
+# bayes_model_new_exp <- rstan::stan_model(model_code = model_stan_new_exp)
+# results <- bayes_fit(db_name, R = 200, warmup = 250, model = 'new_exp', verbose = 1, bayes_model = bayes_model_new_exp)
+# results %>%
+#   dplyr::summarise(across(where(is.numeric), mean))
+# 
+# hist(results$AMLO)
+# hist(results$PART)
