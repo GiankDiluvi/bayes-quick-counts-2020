@@ -18,6 +18,7 @@
 \usepackage[nonatbib, final]{stat520a}
 \usepackage[autonum]{../macros}
 \usepackage{natbib}
+\setcitestyle{brackets=round}
 
 \usepackage[utf8]{inputenc} % allow utf-8 input
 \usepackage[T1]{fontenc}    % use 8-bit T1 fonts
@@ -90,7 +91,7 @@ In Mexico, presidential and gubernatorial elections take place every six years. 
 
 
 
-Multiple Bayesian models have been used in Mexico's quick counts. \citet{mendoza-nieto2016} proposed a simple Bayesian model with a tractable posterior to estimate the proportion of votes received by each candidate in the 2006 and 2012 elections. \citet{cerrillo2019} used the same model in the 2016 elections of Veracruz, a state in the east cost of Mexico. \citet{diluvi2018} modified that same model and used it to predict the results of the 2018 election. \citet{anzarut2018} proposed a Bayesian multilevel regression model and used it in the 2018 election as well.
+Multiple Bayesian models have been used in Mexico's quick counts. \citet{mendoza-nieto2016} proposed a simple Bayesian model with a tractable posterior to estimate the proportion of votes in favor of each candidate in the 2006 and 2012 elections. \citet{cerrillo2019} used the same model in the 2016 elections of Veracruz, a state in the east cost of Mexico. \citet{diluvi2018} modified that same model and used it to predict the results of the 2018 election. \citet{anzarut2018} proposed a Bayesian multilevel regression model and used it in the 2018 election as well.
 \\
 
 
@@ -116,13 +117,13 @@ The observables in the model correspond to the number of votes, which for each c
 \[
 \theta_{ij} = \frac{\sum_{k=1}^{K_i} X_{ij}^k}{\sum_{k=1}^{K_i} n_{i}^k}
 \]
-does not depend on $k$. The proportion of votes in favor of candidate $j$ at a national is defined as
+does not depend on $k$.\footnote{It is possible to assume that the proportions of votes vary by polling station, for example using Dirichlet processes \citep[see][]{lo1984class, nieto2018}, but learning the parameters becomes computationally expensive.} The national proportion of votes in favor of candidate $j$ is then
 \[
   \theta_j = \frac{1}{n} \sum_{i=1}^N n_i \theta_{ij}, \label{eq:thetaj}
 \]
 where $n = \sum_{i=1}^N n_i$ is the total number of nation-wide registered voters. Observe that $\theta_j$ refers to the proportion of votes out of registered voters, rather than out of cast votes. We thus define, for each candidate $j$, the effective proportion of votes as
 \[
-  \lambda_j = \frac{\theta_j}{\sum_{\tilde{j} = 1}^{J-1} \theta_{\tilde{j}}},  \label{eq:lambdaj}
+  \lambda_j = \frac{\theta_j}{\sum_{r = 1}^{J-1} \theta_r},  \label{eq:lambdaj}
 \]
 where the sum is over all proper candidates (i.e. excluding $\theta_J$, which corresponds to uncast ballots). \\
 
@@ -142,13 +143,13 @@ Because the quick counts are organized by governmental authorities, prior distri
 \]
 Sampling from Eqn. \refeq{eq:original_posterior} can be done expeditiously for each stratum---there is no need to run an MCMC scheme. Samples from all strata are then combined via Eqns. \refeq{eq:thetaj} and \refeq{eq:lambdaj} to obtain the national estimates for each candidate. \\
 
-Because data arrive as field officers finish counting the votes, oftentimes entire strata in the sample have no information available. In those strata, \citet{mendoza-nieto2016} sample from the prior distribution---which is the probability distribution that describes the uncertainty in the latent variables. However, because all candidates are assumed independent and $(\theta_{i1}, ..., \theta_{iJ})^\top$ is not constrained to add up to 1, it is possible that the estimated voter turnout, defined as
+Because data arrive as field officers finish counting the votes, oftentimes entire strata in the sample have no information available. Notice that Eqn. \refeq{eq:original_posterior} requires $c_i >2$, i.e. information from at least two polling stations. In those strata, \citet{mendoza-nieto2016} sample from the prior distribution---which is the probability distribution that describes the uncertainty in the latent variables. However, because all candidates are assumed independent and $(\theta_{i1}, ..., \theta_{iJ})^\top$ is not constrained to add up to 1, it is possible that the estimated voter turnout, defined as
 \[
   \rho = \sum_{j=1}^{J-1} \theta_j,
 \]
-exceeds 100\% in some strata---thereby overestimating the aggregated national average. \\
+exceeds 100\% in some strata---thereby causing the aggregated national average to be overestimated. \\
 
-To remedy this, \citet{diluvi2018} proposed new prior distributions for $\theta_{ij}$---namely, Beta distributions with a mean equal to the historic voter turnout divided by the number of proper candidates. Although this seemingly takes care of the issue in practice, it does not technically resolve it because it fails to acknowledge that the proportion of votes, as a vector, lives in the probabilistic simplex. Furthermore, \citet{diluvi2018} only use the modified prior when no information is available from a given stratum. If information is available, samples are obtained from the tractable posterior, \refeq{eq:original_posterior}, which does not correspond to the correct posterior associated with the modified prior distributions.
+To remedy this, \citet{diluvi2018} proposed new prior distributions for $\theta_{ij}$---namely, Beta distributions with a mean equal to the historic voter turnout divided by the number of proper candidates. Although this seemingly takes care of the issue in practice, it does not technically resolve it because it fails to acknowledge that the proportion of votes, as a vector, lives in the probabilistic simplex. Furthermore, \citet{diluvi2018} only use the modified prior when no information is available from a given stratum. If information is available, samples are obtained from the tractable posterior, Eqn. \refeq{eq:original_posterior}, which does not correspond to the correct posterior associated with the modified prior distributions.
 
 
 
@@ -163,7 +164,7 @@ where $\Sigma_i^k = \diag(\tau_{i1}, ..., \tau_{iJ}) / n_i^k$. Observe that the 
 \\
 
 
-Given that the number of registered voters is usually high,\footnote{In 2018, the average $n_i^k$ was 550.} using a Normal approximation to a Binomial distribution is well justified. Furthermore, by adding variance parameters independent of the mean, \citet{mendoza-nieto2016, diluvi2018} are able to model more complex variability structures. There are two shortcomings with this approach. The first is that it assumes that the vector $\theta_i$ lives in $[0, 1]^J$, when in reality $\theta_i$ lives in the probabilistic simplex $\Delta^{J-1} = \{ \theta \in \reals^J \given \theta_j > 0, \sum_{j=1}^J \theta_j = 1 \}$. This is the cause of the voter turnout overestimation. The second issue is that it assumes a trivial covariance structure.
+Given that the number of registered voters is usually high,\footnote{In 2018, the average $n_i^k$ was 550.} using a Normal approximation to a Binomial distribution is well justified. Furthermore, by adding variance parameters independent of the mean, \citet{mendoza-nieto2016, diluvi2018} are able to model more complex variability structures. This approach has two shortcomings. The first is that it assumes that the vector $\theta_i$ lives in $[0, 1]^J$, when in reality $\theta_i$ lives in the probabilistic simplex $\Delta^{J-1} = \{ \theta \in \reals^J \given \theta_j > 0, \sum_{j=1}^J \theta_j = 1 \}$. This is the cause of the voter turnout overestimation. The second issue is that it assumes a trivial covariance structure.
 \\
 
 
@@ -183,7 +184,7 @@ $\mcA$ is known as the \textit{additive log-ratio} \citep{aitchison1982}, and it
 \]
 The additive log-ratio transform is closely related to the center log-ratio transform, whose inverse is the popular softmax function. However, we choose to work with $\mcA$ because it is easier to interpret, and thus to define a prior on the transformed values. \\
 
-In the transformed space $\reals^{J-1}$, the coordinate $j$th corresponds, up to additive constants, to the log of the proportion of votes in favor of candidate $j$, for $j=1, ..., J-1$. We assume that the $J$th candidate corresponds to the set of uncast ballots, which is of less interest. For the rest of the candidates, we define a Normal prior and choose the mean so that, when exponentiated, it coincides with that of \citet{diluvi2018}: the historic voter turnout divided by the number of candidates. This is because the inverse map exponentiates each coordinate and then normalizes the result. By using a Normal prior, we can use the properties of the logNormal distribution to control the prior mean in the transformed space. Note that we assume the proportions of votes to be independent in the transformed space. A dependence structure is introduced when mapping back into the simplex via $\mcA^{-1}$.
+In the transformed space $\reals^{J-1}$, the coordinate $j$th corresponds, up to additive constants, to the log of the proportion of votes in favor of candidate $j$, for $j=1, ..., J-1$. We assume that the $J$th candidate corresponds to the set of uncast ballots, which is of less interest. For the rest of the candidates, we define a Normal prior and choose the mean so that, when mapped back to $\Delta^{J-1}$ via $\mcA^{-1}$, it coincides with that of \citet{diluvi2018}: the historic voter turnout divided by the number of candidates. A dependence structure is introduced when mapping back into the simplex via $\mcA^{-1}$.
 \\
 
 
@@ -209,15 +210,15 @@ We study the results of the 2018 Presidential election and compare four differen
 \benum
   \item The model used by \citet{diluvi2018} in the 2018 elections, which contains modified Beta priors but samples from the original posterior in \citet{mendoza-nieto2016};
   \item that same model but now sampling from the correct posterior via MCMC;
-  \item the model proposed in Section \ref{sec:model} with an arbitrary covariance structure and the priors discussed therein;
-  \item and the same new model but assuming a trivial correlation structure, i.e., $P = I_J$.
+  \item the model proposed in Section \ref{sec:model} but assuming a trivial correlation structure, i.e., $P = I_J$;
+  \item and the same new model but with an arbitrary covariance structure and the uninformative prior on the covariance matrix.
 \eenum
-In the last model, the proportions of votes are forced to live in the probabilistic simplex but the correlation structure assumes a simple form, which results in faster sampling. \\
+In the third model, the proportions of votes are forced to live in the probabilistic simplex but the correlation structure assumes a simple form, which results in faster sampling. \\
 
-For model 1, we generate 10,000 observations from the posterior distribution of $(\lambda_1, ..., \lambda_5)$ and $\rho$. For models 2 and 4, we generate 1,000 observations, and for model 3 only 500 due to the excessive computing time required to fit the model. \\
+For model 1, we generate 10,000 observations from the posterior distribution of $(\lambda_1, ..., \lambda_5)$ and $\rho$. For models 2 and 3, we generate 1,000 observations, and for model 4 only 500 due to the excessive computing time required to fit the model. Code can be found on \href{https://github.com/GiankDiluvi/bayes-quick-counts-2020}{\url{https://github.com/GiankDiluvi/bayes-quick-counts-2020}}. \\
 
 
-We focus our attention on the winner of the election, AMLO. Figure \ref{fig:amlo} shows the posterior distribution of the proportion of votes in favor of him at 22:30pm---the time at which the quick counts committee decided to make the results public. Notably, all models in which sampling was done via MCMC have a smaller variance than the model of \citet{diluvi2018}. Furthermore, this last model underestimates the proportion of votes, possibly because strata with few polling stations have a bigger impact than on the other models. However, as seen in the right panel of Figure \ref{fig:amlo}, all four models close in on the true value at approximately the same rate and with the same variance. \\
+We focus our attention on the winner of the election, AMLO. Figure \ref{fig:amlo} shows the posterior distribution of the proportion of votes in favor of him at 22:30pm---the time at which the quick counts committee decided to make the results public. Notably, models 2 and 3 have a smaller variance than models 1 and 4. Furthermore, model 1 underestimates the proportion of votes, possibly because strata with few polling stations have a bigger impact than on the other models. However, as seen in the right panel of Figure \ref{fig:amlo}, all four models close in on the true value at approximately the same rate. \\
 
 
 \begin{figure}[h]
@@ -228,7 +229,7 @@ We focus our attention on the winner of the election, AMLO. Figure \ref{fig:amlo
 \end{figure}
 
 
-The real advantage of the models in which the proportion of votes is forced to be an element of $\Delta^{J-1}$ is in the estimation of the voter turnout, which can be seen in Figure \ref{fig:part}. Inspecting the right panel we see that the new model (both with and without a complex covariance structure) produces smaller estimates, whereas the original model in both its versions overestimes. Notably, the modification by \citet{diluvi2018} do a good job at fighting the overestimation, but the new model clearly addresses this issue. This is even more clear in the right panel, where we see that, during the early hours of election day---when multiple strata are missing and so samples from the prior are generated---the new model produces considerably shorter credible intervals. \\
+The real advantage of the models in which the proportion of votes is forced to be an element of $\Delta^{J-1}$ is in the estimation of the voter turnout, which can be seen in Figure \ref{fig:part}. Inspecting the right panel, we see that the new model (both with and without a complex covariance structure) produces smaller estimates, whereas the original model in both its versions overestimates the turnout. Notably, the modification by \citet{diluvi2018} does a good job at reducing the overestimation, but the new model completely addresses this issue. This is even more clear in the right panel, where we see that, during the early hours of election day---when multiple strata are missing and so samples from the prior are generated---the new model produces considerably shorter credible intervals. \\
 
 
 \begin{figure}[h]
@@ -239,13 +240,13 @@ The real advantage of the models in which the proportion of votes is forced to b
 \end{figure}
 
 
-Finally, Figure \ref{fig:times} shows the time required to generate samples from each model. Notably, the model with an arbitrary covariance structure requires a lot of time to mix, even for small sample sizes. Interestingly, the new model with a simple covariance structure requires about the same time as the model of \citet{diluvi2018} with an MCMC sampler. However, the former has the advantage of treating the proportions as elements of the simplex, thereby resulting in better estimations of the voter turnout.
+Finally, Figure \ref{fig:times} shows the time required to generate samples from each model. Notably, the model with an arbitrary covariance structure requires a lot of time to mix, even for small sample sizes. Interestingly, the new model with a simple covariance structure requires about the same time as the model of \citet{diluvi2018} with an MCMC sampler. However, the former has the advantage of treating the proportions as elements of the simplex, thereby resulting in better estimations of the voter turnout. It should be noted that using MCMC sampling has a clear impact in computation cost: the model with tractable posterior requires $\mcO(1)$ time to train, whereas models 2 and 3 become more expensive as sample size increases.
 
 
 \begin{figure}[h]
   \centering
   \includegraphics[scale=0.5]{../fig/times.pdf}
-  \caption{Time in minutes necessary to generate the posterior samples for each model as a function of time. \texttt{new\_complex} refers to model 4, \texttt{new\_simple} to model 3, \texttt{original} to model 1, and \texttt{original\_mcmc} to model 2.}
+  \caption{Time in minutes necessary to generate the posterior samples for each model as a function of time. The red dotted line indicates the 5 minute limit for model training. \texttt{new\_complex} refers to model 4, \texttt{new\_simple} to model 3, \texttt{original} to model 1, and \texttt{original\_mcmc} to model 2.}
   \label{fig:times}
 \end{figure}
 
@@ -254,18 +255,17 @@ Finally, Figure \ref{fig:times} shows the time required to generate samples from
 
 \section{Conclusion} \label{sec:conclusion}
 
-Takeaways:
-\benum
-  \item the new model handles the voter turnout really well
-  \item the cost of using an arbitrary covariance structure does not seem to justify its marginal gains, which are probably more due to the simplex anyway
-\eenum
 
-Further work:
-\benum
-  \item compromise in covariance structure via matrix decomposition
-  \item other MC sampling techniques
-  \item VI for fitting
-\eenum
+In this work, we proposed a new general-purpose Bayesian model for estimating the results of Mexican quick counts that \textit{(i)} addresses the known issue of previous Bayesian models overestimating the voter turnout by considering the proportion of votes as an element of the probabilistic simplex; and \textit{(ii)} can be designed to account for arbitrary covariance structures. We also discussed uninformative prior distributions for both the vector of proportions of votes and covariance matrix and developed \textsc{Stan} code to sample from the posterior of the model.
+\\
+
+The new model successfully reduces the voter turnout overestimation even if a trivial covariance structure is assumed. In this regard, we also observed that working with a non-trivial covariance structure results in very slow mixing times and no noticeable gains in accuracy (on top of the benefits that result from working on the simplex). A possible avenue for future work would be considering special decompositions of the covariance structure that give more flexibility than the trivial structure but are not as expensive as the arbitrary structure.
+\\
+
+Some of the densities in Figures \ref{fig:amlo} and \ref{fig:part} have their masses concentrated in very different parts of $[0, 1]$. It should be noted that it is not easy to compare these densities with the known official results of the election: during election day, polling stations officers report the votes after their first count so as to get information to the quick counts committee as early as possible. However, the officers then do a recount, and some votes are subsequently audited in the week after the election. A fair way to compare the models would be to obtain the results from all polling stations, generate multiple sample according to the sampling design used on election day, and train each model in each sample. It would then be possible to compare the errors of each model. However, to the best of our knowledge such a data base is not publicly available. As for the densities in Figures \ref{fig:amlo} and \ref{fig:part}, we believe the discrepancy might be due to the small number of posterior samples generated.
+\\
+
+Another line of research is to design faster schemes for model learning. As seen in Figure \ref{fig:times}, even the models with a simple covariance structure require over 5 minutes to generate posterior samples when the sample size is relatively large. One possibility would be to use sequential Monte Carlo \citep{stewart1992, gordon1993, kitagawa1996} or variational inference \citep{jordan1999, wainwright2008}.
 
 
 

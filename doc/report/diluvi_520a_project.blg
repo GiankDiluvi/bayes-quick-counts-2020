@@ -3,44 +3,46 @@ Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: diluvi_520a_project.aux
 The style file: abbrvnat.bst
 Database file #1: ../ref.bib
-You've used 8 entries,
+Warning--can't use both volume and number fields in gordon1993
+You've used 15 entries,
             2773 wiz_defined-function locations,
-            647 strings with 5983 characters,
-and the built_in function-call counts, 3520 in all, are:
-= -- 327
-> -- 162
-< -- 6
-+ -- 56
-- -- 48
-* -- 273
-:= -- 537
-add.period$ -- 26
-call.type$ -- 8
-change.case$ -- 40
-chr.to.int$ -- 8
-cite$ -- 16
-duplicate$ -- 165
-empty$ -- 313
-format.name$ -- 60
-if$ -- 739
+            698 strings with 7338 characters,
+and the built_in function-call counts, 6923 in all, are:
+= -- 651
+> -- 311
+< -- 16
++ -- 107
+- -- 92
+* -- 519
+:= -- 1028
+add.period$ -- 50
+call.type$ -- 15
+change.case$ -- 74
+chr.to.int$ -- 15
+cite$ -- 31
+duplicate$ -- 337
+empty$ -- 611
+format.name$ -- 115
+if$ -- 1487
 int.to.chr$ -- 1
 int.to.str$ -- 1
-missing$ -- 7
-newline$ -- 49
-num.names$ -- 32
-pop$ -- 77
+missing$ -- 14
+newline$ -- 85
+num.names$ -- 62
+pop$ -- 153
 preamble$ -- 1
-purify$ -- 32
+purify$ -- 60
 quote$ -- 0
-skip$ -- 123
+skip$ -- 265
 stack$ -- 0
-substring$ -- 160
-swap$ -- 14
-text.length$ -- 1
+substring$ -- 319
+swap$ -- 55
+text.length$ -- 6
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 88
-warning$ -- 0
-while$ -- 37
+type$ -- 160
+warning$ -- 1
+while$ -- 72
 width$ -- 0
-write$ -- 113
+write$ -- 209
+(There was 1 warning)

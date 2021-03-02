@@ -1,4 +1,4 @@
-\begin{thebibliography}{8}
+\begin{thebibliography}{15}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -18,6 +18,10 @@ M.~Anzarut, L.~F. González, and M.~T. Ortiz.
 \newblock In \emph{National Statistics Forum (FNE) and Latin-American Congress
   of Statistical Societies (CLATSE)}, pages 1--13. Springer, 2018.
 
+\bibitem[Barajas(2018)]{nieto2018}
+L.~E.~N. Barajas.
+\newblock Los modelos de estimación: algunas propuestas robustas, 2018.
+
 \bibitem[Carrera~Barroso(2019)]{carrera2019}
 J.~A. Carrera~Barroso.
 \newblock Quick counts and exit polls in the mexican elections.
@@ -34,6 +38,24 @@ G.~C. Di-Luvi, G.~Orantes-Jordan, and M.~Mendoza.
 \newblock Statistics in the 2018 mexican general election quick counts.
 \newblock \emph{Laberintos \& Infinitoss}, 48:\penalty0 29--37, 2018.
 
+\bibitem[Gordon et~al.(1993)Gordon, Salmond, and Smith]{gordon1993}
+N.~J. Gordon, D.~J. Salmond, and A.~F. Smith.
+\newblock Novel approach to nonlinear/non-gaussian bayesian state estimation.
+\newblock In \emph{IEE proceedings F (radar and signal processing)}, volume
+  140, pages 107--113. IET, 1993.
+
+\bibitem[Jordan et~al.(1999)Jordan, Ghahramani, Jaakkola, and Saul]{jordan1999}
+M.~I. Jordan, Z.~Ghahramani, T.~S. Jaakkola, and L.~K. Saul.
+\newblock An introduction to variational methods for graphical models.
+\newblock \emph{Machine learning}, 37\penalty0 (2):\penalty0 183--233, 1999.
+
+\bibitem[Kitagawa(1996)]{kitagawa1996}
+G.~Kitagawa.
+\newblock Monte carlo filter and smoother for non-gaussian nonlinear state
+  space models.
+\newblock \emph{Journal of computational and graphical statistics}, 5\penalty0
+  (1):\penalty0 1--25, 1996.
+
 \bibitem[Lewandowski et~al.(2009)Lewandowski, Kurowicka, and
   Joe]{lewandowski2009}
 D.~Lewandowski, D.~Kurowicka, and H.~Joe.
@@ -41,6 +63,11 @@ D.~Lewandowski, D.~Kurowicka, and H.~Joe.
   onion method.
 \newblock \emph{Journal of multivariate analysis}, 100\penalty0 (9):\penalty0
   1989--2001, 2009.
+
+\bibitem[Lo(1984)]{lo1984class}
+A.~Y. Lo.
+\newblock On a class of bayesian nonparametric estimates: I. density estimates.
+\newblock \emph{The Annals of Statistics}, pages 351--357, 1984.
 
 \bibitem[Mendoza and Nieto-Barajas(2016)]{mendoza-nieto2016}
 M.~Mendoza and L.~E. Nieto-Barajas.
@@ -53,5 +80,21 @@ M.~Mendoza and L.~E. Nieto-Barajas.
 \newblock {RStan}: the {R} interface to {Stan}, 2020.
 \newblock URL \url{http://mc-stan.org/}.
 \newblock R package version 2.21.2.
+
+\bibitem[Stewart and {McCarty Jr.}(1992)]{stewart1992}
+L.~Stewart and P.~{McCarty Jr.}
+\newblock {Use of Bayesian belief networks to fuse continuous and discrete
+  information for target recognition, tracking, and situation assessment}.
+\newblock In V.~Libby and I.~Kadar, editors, \emph{Signal Processing, Sensor
+  Fusion, and Target Recognition}, volume 1699, pages 177 -- 185. International
+  Society for Optics and Photonics, SPIE, 1992.
+\newblock \doi{10.1117/12.138224}.
+\newblock URL \url{https://doi.org/10.1117/12.138224}.
+
+\bibitem[Wainwright and Jordan(2008)]{wainwright2008}
+M.~J. Wainwright and M.~I. Jordan.
+\newblock \emph{Graphical models, exponential families, and variational
+  inference}.
+\newblock Now Publishers Inc, 2008.
 
 \end{thebibliography}
