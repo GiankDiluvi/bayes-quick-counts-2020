@@ -1,4 +1,4 @@
-Revisiting the 2018 Mexican general election quick counts---a Bayesian perspective
+A general-purpose Bayesian model for estimating election results in Mexico
 =================================================
 Gian Carlo Diluvi \
 Department of Statistics \
@@ -6,7 +6,7 @@ Universisty of British Columbia \
 STAT 520A: Topics in Bayesian Analysis and Decision Theory
 --------------------------------------------------------------------------------
 
-Latest version of the project:[Final version](https://github.com/GiankDiluvi/bayes-quick-counts-2020/blob/master/doc/report/diluvi_520a_project.pdf)
+Latest version of the project: [Final version](https://github.com/GiankDiluvi/bayes-quick-counts-2020/blob/master/doc/report/diluvi_520a_project.pdf)
 
 ### Abstract
 
