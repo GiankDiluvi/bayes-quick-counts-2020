@@ -145,6 +145,40 @@ combined + plot_layout(guides = "collect")
 ggsave('../doc/fig/amlo.pdf', width = 16)
 
 
+
+amlo_ribbon2 <- db %>% 
+  dplyr::filter(candidate == 'AMLO') %>% 
+  dplyr::group_by(date, model) %>% 
+  dplyr::summarise(lower = quantile(vote, 0.05),
+                   mean = mean(vote),
+                   upper = quantile(vote, 0.95)) %>% 
+  ggplot() +
+  geom_ribbon(aes(x = date,
+                  ymin = lower,
+                  ymax = upper,
+                  fill = model,
+                  group = model,
+                  color = model),
+              alpha = 0.3) +
+  geom_path(aes(x = date,
+                y = mean,
+                color = model,
+                group = model),
+            linetype = 2) +
+  scale_color_manual(values = colors) +
+  scale_fill_manual(values = colors) +
+  scale_x_discrete(labels = hour_format) +
+  theme(text = element_text(size = text_size),
+        axis.text.x = element_text(angle = 45, hjust=1),
+        legend.position = "bottom") +
+  labs(x = "Time on election day",
+       y = expression(paste(theta[1], ' - AMLO')),
+       color = "Model: ",
+       fill = "Model: ")
+ggsave('../doc/fig/amlo2.pdf', plot = amlo_ribbon2, width = 12)
+
+
+
 # distribution of voter turnout by model and date
 db %>% 
   dplyr::filter(candidate == 'PART') %>% 
@@ -208,6 +242,42 @@ combined <- part_dist + part_ribbon  & theme(legend.position = "bottom")
 combined + plot_layout(guides = "collect")
 ggsave('../doc/fig/part.pdf', width = 16)
 
+
+
+
+part_ribbon2 <- db %>% 
+  dplyr::filter(candidate == 'PART') %>% 
+  dplyr::group_by(date, model) %>% 
+  dplyr::summarise(lower = quantile(vote, 0.05),
+                   mean = mean(vote),
+                   upper = quantile(vote, 0.95)) %>% 
+  ggplot() +
+  #geom_hline(yintercept = 0.6343, color = "red", linetype = "dashed") +
+  geom_ribbon(aes(x = date,
+                  ymin = lower,
+                  ymax = upper,
+                  fill = model,
+                  group = model,
+                  color = model),
+              alpha = 0.3) +
+  geom_path(aes(x = date,
+                y = mean,
+                color = model,
+                group = model),
+            linetype = 2) +
+  scale_color_manual(values = colors) +
+  scale_fill_manual(values = colors) +
+  theme(text = element_text(size = text_size),
+        axis.text.x = element_text(angle = 45, hjust=1),
+        legend.position = "bottom") +
+  scale_x_discrete(labels = hour_format) +
+  labs(x = "Time on election day",
+       y = expression(paste('Voter turnout ', rho)),
+       color = "Model: ",
+       fill = "Model: ")
+
+ggsave('../doc/fig/part2.pdf', plot = part_ribbon2, width = 12)
+
 # evolution of times by model
 times_plot <- times %>% 
   dplyr::mutate(minutes= time_s / 60,
@@ -220,10 +290,10 @@ times_plot <- times %>%
   scale_y_continuous(breaks = seq(0, 40, by = 5)) +
   scale_color_manual(values = colors) +
   labs(x = "Time on election day",
-       y = "Minutes to generate samples",
+       y = "Minutes to",
        color = 'Model: ') +
   theme(text = element_text(size = text_size),
         axis.text.x = element_text(angle = 45, hjust=1),
         legend.position = 'bottom')
 
-ggsave('../doc/fig/times.pdf', plot = times_plot, width = 10)
+ggsave('../doc/fig/times.pdf', plot = times_plot, width = 12)

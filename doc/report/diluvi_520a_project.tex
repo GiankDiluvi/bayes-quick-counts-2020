@@ -78,7 +78,7 @@
 \maketitle
 
 \begin{abstract}
-  In Mexico, estimating the results of the election the day it takes place is a tradition that gives certainty to the electoral process. For this purpose, electoral authorities organize a quick count, in which a random sample of polling stations is used to estimate the results of the election. Multiple Bayesian models have been used in Mexican quick counts since 2006. However, these models assume that candidates are independent, which has a negative impact on model accuracy. In this work, we propose a general-purpose model that takes care of these issues by forcing the proportions of votes to reside in the probabilistic simplex and assuming an arbitrary covariance structure. We discuss uninformative prior distributions for both the proportions in the simplex and the covariance matrix and compare the model with one of the models used in the 2018 Mexican presidential election.
+  In Mexico, estimating the results of the election the day it takes place is a tradition that gives certainty to the electoral process. For this purpose, electoral authorities organize a quick count, in which a random sample of polling stations is used to estimate the results of the election. Multiple Bayesian models have been used in Mexican quick counts since 2006. However, these models assume that candidates are independent, which has a negative impact on model accuracy. In this work, we propose a general-purpose model that takes care of these issues by forcing the proportions of votes to reside in the probabilistic simplex while allowing for an arbitrary covariance structure. We discuss uninformative prior distributions for both the proportions in the simplex and the covariance matrix and compare the model with one of the models used in the 2018 Mexican presidential election.
 \end{abstract}
 
 
@@ -215,37 +215,54 @@ We study the results of the 2018 Presidential election and compare four differen
 \eenum
 In the third model, the proportions of votes are forced to live in the probabilistic simplex but the correlation structure assumes a simple form, which results in faster sampling. \\
 
-For model 1, we generate 10,000 observations from the posterior distribution of $(\lambda_1, ..., \lambda_5)$ and $\rho$. For models 2 and 3, we generate 1,000 observations, and for model 4 only 500 due to the excessive computing time required to fit the model. Code can be found on \href{https://github.com/GiankDiluvi/bayes-quick-counts-2020}{\url{https://github.com/GiankDiluvi/bayes-quick-counts-2020}}. \\
+For model 1, we generated 10,000 observations from the posterior distribution of $(\lambda_1, ..., \lambda_5)$ and $\rho$. For models 2 and 3, we generated 1,000 observations, and for model 4 only 500 due to the excessive computing time required to fit the model. The code can be found on \href{https://github.com/GiankDiluvi/bayes-quick-counts-2020}{\url{https://github.com/GiankDiluvi/bayes-quick-counts-2020}}. \\
 
 
-We focus our attention on the winner of the election, AMLO. Figure \ref{fig:amlo} shows the posterior distribution of the proportion of votes in favor of him at 22:30pm---the time at which the quick counts committee decided to make the results public. Notably, models 2 and 3 have a smaller variance than models 1 and 4. Furthermore, model 1 underestimates the proportion of votes, possibly because strata with few polling stations have a bigger impact than on the other models. However, as seen in the right panel of Figure \ref{fig:amlo}, all four models close in on the true value at approximately the same rate. \\
+We focus our attention on the winner of the election, AMLO. Figure \ref{fig:amlo} shows the posterior mean and 95\% credible intervals from 19:00pm to 22:30pm---the time at which the quick counts committee decided to make the results public. Notably, all four models close in on the true value at approximately the same rate. \\
 
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=\textwidth]{../fig/amlo.pdf}
-  \caption{The left panel shows the posterior distribution of the proportion of votes in favor of AMLO at 22:30pm, with models by color. The right panel shows the mean and 0.025 and 0.975 quantiles (giving a 95\% posterior credible interval) for different times. \texttt{new\_complex} refers to model 4, \texttt{new\_simple} to model 3, \texttt{original} to model 1, and \texttt{original\_mcmc} to model 2.}
+  \includegraphics[width=\textwidth]{../fig/amlo2.pdf}
+  \caption{Posterior mean and 0.025 and 0.975 quantiles (giving a 95\% posterior credible interval) of the proportion of votes in favor of AMLO, the winner of the presidential elecion, for different times. The true value of $\theta_1$ is 0.5319. \texttt{new\_complex} refers to model 4, \texttt{new\_simple} to model 3, \texttt{original} to model 1, and \texttt{original\_mcmc} to model 2.}
   \label{fig:amlo}
 \end{figure}
 
 
-The real advantage of the models in which the proportion of votes is forced to be an element of $\Delta^{J-1}$ is in the estimation of the voter turnout, which can be seen in Figure \ref{fig:part}. Inspecting the right panel, we see that the new model (both with and without a complex covariance structure) produces smaller estimates, whereas the original model in both its versions overestimates the turnout. Notably, the modification by \citet{diluvi2018} does a good job at reducing the overestimation, but the new model completely addresses this issue. This is even more clear in the right panel, where we see that, during the early hours of election day---when multiple strata are missing and so samples from the prior are generated---the new model produces considerably shorter credible intervals. \\
+%\begin{figure}[h]
+%  \centering
+%  \includegraphics[width=\textwidth]{../fig/amlo.pdf}
+%  \caption{The left panel shows the posterior distribution of the proportion of votes in favor of AMLO at 22:30pm, with models by color. The right panel shows the mean %and 0.025 and 0.975 quantiles (giving a 95\% posterior credible interval) for different times. \texttt{new\_complex} refers to model 4, \texttt{new\_simple} to model %3, \texttt{original} to model 1, and \texttt{original\_mcmc} to model 2.}
+%  \label{fig:amlo}
+%\end{figure}
+
+
+The real advantage of the models in which the proportion of votes is forced to be an element of $\Delta^{J-1}$ is in the estimation of the voter turnout, which can be seen in Figure \ref{fig:part}. The new model (both with and without a complex covariance structure) produces lower and more accurate estimates, whereas the original model in both its versions overestimates the turnout, especially early in election day---when multiple strata are missing and so samples from the prior are generated. \\
 
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=\textwidth]{../fig/part.pdf}
-  \caption{The left panel shows the posterior distribution of the voter turnout at 22:30pm, with models by color. The right panel shows the mean and 0.025 and 0.975 quantiles (giving a 95\% posterior credible interval) for different times. \texttt{new\_complex} refers to model 4, \texttt{new\_simple} to model 3, \texttt{original} to model 1, and \texttt{original\_mcmc} to model 2.}
+  \includegraphics[width=\textwidth]{../fig/part2.pdf}
+  \caption{Posterior mean and 0.025 and 0.975 quantiles (giving a 95\% posterior credible interval) of the voter turnout on election day for different times. The true value of $\rho$ is 0.6343. \texttt{new\_complex} refers to model 4, \texttt{new\_simple} to model 3, \texttt{original} to model 1, and \texttt{original\_mcmc} to model 2.}
   \label{fig:part}
 \end{figure}
 
 
-Finally, Figure \ref{fig:times} shows the time required to generate samples from each model. Notably, the model with an arbitrary covariance structure requires a lot of time to mix, even for small sample sizes. Interestingly, the new model with a simple covariance structure requires about the same time as the model of \citet{diluvi2018} with an MCMC sampler. However, the former has the advantage of treating the proportions as elements of the simplex, thereby resulting in better estimations of the voter turnout. It should be noted that using MCMC sampling has a clear impact in computation cost: the model with tractable posterior requires $\mcO(1)$ time to train, whereas models 2 and 3 become more expensive as sample size increases.
+
+%\begin{figure}[h]
+%  \centering
+%  \includegraphics[width=\textwidth]{../fig/part.pdf}
+%  \caption{The left panel shows the posterior distribution of the voter turnout at 22:30pm, with models by color. The right panel shows the mean and 0.025 and 0.975 %quantiles (giving a 95\% posterior credible interval) for different times. \texttt{new\_complex} refers to model 4, \texttt{new\_simple} to model 3, %\texttt{original} to model 1, and \texttt{original\_mcmc} to model 2.}
+%  \label{fig:part}
+%\end{figure}
+
+
+Finally, Figure \ref{fig:times} shows the time required to generate samples from each model. The model with an arbitrary covariance structure requires a lot of time to mix, even for small sample sizes. Interestingly, the new model with a simple covariance structure requires about the same time as the model of \citet{diluvi2018} with an MCMC sampler. However, the former has the advantage of treating the proportions as elements of the simplex, thereby resulting in better estimations of the voter turnout. It should be noted that using MCMC sampling has a clear impact in computation cost: the model with tractable posterior requires $\mcO(1)$ time to train, whereas models 2 and 3 become more expensive as sample size increases.
 
 
 \begin{figure}[h]
   \centering
-  \includegraphics[scale=0.5]{../fig/times.pdf}
+  \includegraphics[width=\textwidth]{../fig/times.pdf}
   \caption{Time in minutes necessary to generate the posterior samples for each model as a function of time. The red dotted line indicates the 5 minute limit for model training. \texttt{new\_complex} refers to model 4, \texttt{new\_simple} to model 3, \texttt{original} to model 1, and \texttt{original\_mcmc} to model 2.}
   \label{fig:times}
 \end{figure}
@@ -256,14 +273,13 @@ Finally, Figure \ref{fig:times} shows the time required to generate samples from
 \section{Conclusion} \label{sec:conclusion}
 
 
-In this work, we proposed a new general-purpose Bayesian model for estimating the results of Mexican quick counts that \textit{(i)} addresses the known issue of previous Bayesian models overestimating the voter turnout by considering the proportion of votes as an element of the probabilistic simplex; and \textit{(ii)} can be designed to account for arbitrary covariance structures. We also discussed uninformative prior distributions for both the vector of proportions of votes and covariance matrix and developed \textsc{Stan} code to sample from the posterior of the model.
+In this work, we proposed a new general-purpose Bayesian model for estimating the results of Mexican quick counts that \textit{(i)} addresses the known issue of previous Bayesian models overestimating the voter turnout by considering the proportion of votes as an element of the probabilistic simplex; and \textit{(ii)} can be designed to account for arbitrary covariance structures. We also discussed uninformative prior distributions for both the vector of proportions of votes and the covariance matrix. Finally, we developed \textsc{Stan} code to sample from the posterior of the model.
 \\
 
 The new model successfully reduces the voter turnout overestimation even if a trivial covariance structure is assumed. In this regard, we also observed that working with a non-trivial covariance structure results in very slow mixing times and no noticeable gains in accuracy (on top of the benefits that result from working on the simplex). A possible avenue for future work would be considering special decompositions of the covariance structure that give more flexibility than the trivial structure but are not as expensive as the arbitrary structure.
 \\
 
-Some of the densities in Figures \ref{fig:amlo} and \ref{fig:part} have their masses concentrated in very different parts of $[0, 1]$. It should be noted that it is not easy to compare these densities with the known official results of the election: during election day, polling stations officers report the votes after their first count so as to get information to the quick counts committee as early as possible. However, the officers then do a recount, and some votes are subsequently audited in the week after the election. A fair way to compare the models would be to obtain the results from all polling stations, generate multiple sample according to the sampling design used on election day, and train each model in each sample. It would then be possible to compare the errors of each model. However, to the best of our knowledge such a data base is not publicly available. As for the densities in Figures \ref{fig:amlo} and \ref{fig:part}, we believe the discrepancy might be due to the small number of posterior samples generated.
-\\
+%Some of the densities in Figures \ref{fig:amlo} and \ref{fig:part} have their masses concentrated in very different parts of $[0, 1]$. It should be noted that it is not easy to compare these densities with the known official results of the election: during election day, polling stations officers report the votes after their first count so as to get information to the quick counts committee as early as possible. However, the officers then do a recount, and some votes are subsequently audited in the week after the election. A fair way to compare the models would be to obtain the results from all polling stations, generate multiple sample according to the sampling design used on election day, and train each model in each sample. It would then be possible to compare the errors of each model. However, to the best of our knowledge such a data base is not publicly available. As for the densities in Figures \ref{fig:amlo} and \ref{fig:part}, we believe the discrepancy might be due to the small number of posterior samples generated. \\
 
 Another line of research is to design faster schemes for model learning. As seen in Figure \ref{fig:times}, even the models with a simple covariance structure require over 5 minutes to generate posterior samples when the sample size is relatively large. One possibility would be to use sequential Monte Carlo \citep{stewart1992, gordon1993, kitagawa1996} or variational inference \citep{jordan1999, wainwright2008}.
 

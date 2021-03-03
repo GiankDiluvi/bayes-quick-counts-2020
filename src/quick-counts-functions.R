@@ -486,20 +486,20 @@ model_stan_new_exp <- "
     
     // model
     for (k in 1:c){
-    votes[k, 1:6] ~ multi_normal(nl[k] * theta, (1/sqrt(nl[k])) * quad_form_diag(T, tau));    // each polling station is normal
+    votes[k, 1:6] ~ multi_normal(nl[k] * theta, (1/nl[k]) * quad_form_diag(T, tau));    // each polling station is normal
     }
   }
   "
 
 
 ### TEST ####
-# db_name <- "../data/remesas/REMESAS0100012230.txt"
-# bayes_model_original <- rstan::stan_model(model_code = model_stan_original)
+ db_name <- "../data/remesas/REMESAS0100012100.txt"
+ bayes_model_original <- rstan::stan_model(model_code = model_stan_original)
 # bayes_model_new <- rstan::stan_model(model_code = model_stan_new)
-# bayes_model_new_exp <- rstan::stan_model(model_code = model_stan_new_exp)
-# results <- bayes_fit(db_name, R = 200, warmup = 250, model = 'new_exp', verbose = 1, bayes_model = bayes_model_new_exp)
-# results %>%
-#   dplyr::summarise(across(where(is.numeric), mean))
-# 
-# hist(results$AMLO)
-# hist(results$PART)
+ bayes_model_new_exp <- rstan::stan_model(model_code = model_stan_new_exp)
+ results <- bayes_fit(db_name, R = 5000, warmup = 1000, model = 'new_exp', verbose = 1, bayes_model = bayes_model_new_exp)
+ results %>%
+   dplyr::summarise(across(where(is.numeric), mean))
+ 
+ hist(results$AMLO)
+ hist(results$PART)
