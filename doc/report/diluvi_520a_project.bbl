@@ -14,28 +14,24 @@ J.~Aitchison.
 \bibitem[Anzarut et~al.(2018)Anzarut, González, and Ortiz]{anzarut2018}
 M.~Anzarut, L.~F. González, and M.~T. Ortiz.
 \newblock A heavy-tailed multilevel mixture model for the quick count in the
-  mexican elections of 2018.
+  {Mexican} elections of 2018.
 \newblock In \emph{National Statistics Forum (FNE) and Latin-American Congress
   of Statistical Societies (CLATSE)}, pages 1--13. Springer, 2018.
 
-\bibitem[Barajas(2018)]{nieto2018}
-L.~E.~N. Barajas.
-\newblock Los modelos de estimación: algunas propuestas robustas, 2018.
-
 \bibitem[Carrera~Barroso(2019)]{carrera2019}
 J.~A. Carrera~Barroso.
-\newblock Quick counts and exit polls in the mexican elections.
+\newblock Quick counts and exit polls in the {Mexican} elections.
 \newblock \emph{Polis}, 15\penalty0 (2):\penalty0 127--166, 2019.
 
-\bibitem[Cerrillo and Barajas(2019)]{cerrillo2019}
-S.~F.~J. Cerrillo and L.~E.~N. Barajas.
-\newblock The veracruz 2016 quick count: Statistical and logistic aspects.
+\bibitem[Cerrillo and Nieto-Barajas(2019)]{cerrillo2019}
+S.~F.~J. Cerrillo and L.~E. Nieto-Barajas.
+\newblock The {Veracruz} 2016 quick count: Statistical and logistic aspects.
 \newblock \emph{Revista Mexicana de Estudios Electorales}, 3\penalty0 (21),
   2019.
 
 \bibitem[Di-Luvi et~al.(2018)Di-Luvi, Orantes-Jordan, and Mendoza]{diluvi2018}
 G.~C. Di-Luvi, G.~Orantes-Jordan, and M.~Mendoza.
-\newblock Statistics in the 2018 mexican general election quick counts.
+\newblock Statistics in the 2018 {Mexican} general election quick counts.
 \newblock \emph{Laberintos \& Infinitoss}, 48:\penalty0 29--37, 2018.
 
 \bibitem[Gordon et~al.(1993)Gordon, Salmond, and Smith]{gordon1993}
@@ -71,9 +67,13 @@ A.~Y. Lo.
 
 \bibitem[Mendoza and Nieto-Barajas(2016)]{mendoza-nieto2016}
 M.~Mendoza and L.~E. Nieto-Barajas.
-\newblock Quick counts in the mexican presidential elections: A bayesian
+\newblock Quick counts in the {Mexican} presidential elections: A {Bayesian}
   approach.
 \newblock \emph{Electoral Studies}, 43:\penalty0 124--132, 2016.
+
+\bibitem[Nieto-Barajas(2018)]{nieto2018}
+L.~E. Nieto-Barajas.
+\newblock Los modelos de estimación: algunas propuestas robustas, 2018.
 
 \bibitem[{Stan Development Team}(2020)]{rstan}
 {Stan Development Team}.

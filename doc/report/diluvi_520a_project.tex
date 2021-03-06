@@ -78,7 +78,7 @@
 \maketitle
 
 \begin{abstract}
-  In Mexico, estimating the results of the election the day it takes place is a tradition that gives certainty to the electoral process. For this purpose, electoral authorities organize a quick count, in which a random sample of polling stations is used to estimate the results of the election. Multiple Bayesian models have been used in Mexican quick counts since 2006. However, these models assume that candidates are independent, which has a negative impact on model accuracy. In this work, we propose a general-purpose model that takes care of these issues by forcing the proportions of votes to reside in the probabilistic simplex while allowing for an arbitrary covariance structure. We discuss uninformative prior distributions for both the proportions in the simplex and the covariance matrix and compare the model with one of the models used in the 2018 Mexican presidential election.
+  In Mexico, estimating the results of elections the day they take place is an important tradition that gives certainty to electoral processes. For this purpose, electoral authorities frequently organize quick counts, in which a random sample of polling stations is used to estimate the results of an election. Multiple Bayesian models have been used in Mexican quick counts since 2006. However, these models assume that candidates are independent, which negatively affects model accuracy. In this work, we propose a general-purpose Bayesian model that takes care of this issue by forcing the proportions of votes to reside in the probabilistic simplex while allowing for an arbitrary covariance structure. We discuss uninformative prior distributions for both the proportions in the simplex and the covariance matrix. We find that our model predicts vote proportions as well as models used in the 2018 Mexican presidential election, but it is considerably better at predicting voter turnout.
 \end{abstract}
 
 
@@ -129,11 +129,11 @@ where the sum is over all proper candidates (i.e. excluding $\theta_J$, which co
 
 
 
-\citet{mendoza-nieto2016} propose modeling the number of votes in polling station $k$ of stratum $i$ and in favor of candidate $j$ via
+\citet{mendoza-nieto2016} model the number of votes in polling station $k$ of stratum $i$ and in favor of candidate $j$ via
 \[
   X_{ij}^k \sim \distNorm \left( n_i^k \theta_{ij}, \frac{\tau_{ij}}{n_i^k} \right), \label{eq:original_likelihood}
 \]
-where $\tau_{ij}$ is a precision parameter.\footnote{Although $\frac{\tau_{ij}}{n_i^k}$ corresponds to the variance of the distribution.} The number of votes are assumed to be independent between candidates, which is inaccurate because, at each polling station, the total votes should add up to the known number of registered voters, $n_i^k$. \citet{mendoza-nieto2016} acknowledge this issue but argue that including a correlation structure, although correct in theory, produces small improvements in accuracy. \\
+where $\tau_{ij}$ is a precision parameter.\footnote{Although $\frac{\tau_{ij}}{n_i^k}$ corresponds to the variance of the distribution.}  The number of votes are assumed to be independent between candidates, which is inaccurate because, at each polling station, the total votes should add up to the known number of registered voters, $n_i^k$. \citet{mendoza-nieto2016} acknowledge this issue but argue that including a correlation structure, although correct in theory, produces small improvements in accuracy. \\
 
 
 Because the quick counts are organized by governmental authorities, prior distributions should assign the same likelihood of winning to each candidate. \citet{mendoza-nieto2016} use uniform distributions for $\theta_{ij}$ and an independent improper prior for $\tau_{ij}$. With these, the posterior distribution after observing the information from $c_i$ polling stations in stratum $i$ has a closed form, namely
@@ -149,7 +149,10 @@ Because data arrive as field officers finish counting the votes, oftentimes enti
 \]
 exceeds 100\% in some strata---thereby causing the aggregated national average to be overestimated. \\
 
-To remedy this, \citet{diluvi2018} proposed new prior distributions for $\theta_{ij}$---namely, Beta distributions with a mean equal to the historic voter turnout divided by the number of proper candidates. Although this seemingly takes care of the issue in practice, it does not technically resolve it because it fails to acknowledge that the proportion of votes, as a vector, lives in the probabilistic simplex. Furthermore, \citet{diluvi2018} only use the modified prior when no information is available from a given stratum. If information is available, samples are obtained from the tractable posterior, Eqn. \refeq{eq:original_posterior}, which does not correspond to the correct posterior associated with the modified prior distributions.
+To remedy this, \citet{diluvi2018} proposed new prior distributions for $\theta_{ij}$---namely, Beta distributions with a mean equal to the historic voter turnout divided by the number of proper candidates. Although this seemingly takes care of the issue in practice, it does not technically resolve it because it fails to acknowledge that the proportion of votes, as a vector, lives in the probabilistic simplex. Furthermore, \citet{diluvi2018} only use the modified prior when no information is available from a given stratum. If information is available, samples are obtained from the tractable posterior, Eqn. \refeq{eq:original_posterior}, which does not correspond to the correct posterior associated with the modified prior distributions. \\
+
+
+\cite{anzarut2018} incorporate demographic and geographic explicative variables by modeling $\theta_{ij}$ using a regression model. They also use a zero-inflated $t$-distribution to model the number of votes (as opposed to the Normal distribution in Eqn. \refeq{eq:original_likelihood}). This results in a more robust and accurate model, but it also takes considerably more time to learn. Specifically, in the 2018 general election the model learning was parallelised over 48 CPU cores and still took almost 15 minutes to run. Furthermore, when the sample size was large, the model produced estimates almost identical to those produced by \cite{diluvi2018}, and so we focus our attention in the latter model.
 
 
 
@@ -191,7 +194,7 @@ In the transformed space $\reals^{J-1}$, the coordinate $j$th corresponds, up to
 Perhaps the best known distribution in the space of covariance matrices is the Wishart distribution, which is the multivariate generalization of the Gamma distribution. The Wishart distribution was popularized because it is the conjugate prior for the covariance matrix of Normally-distributed populations. However, the purpose of the prior being to quantify the prior knowledge of the parameters, we consider it best to choose a distribution that reflects the vague knowledge we have of the correlation structure between candidates.
 \\
 
-For this purpose, we decompose $\Sigma_i^k = \diag(\sigma_1, ..., \sigma_J) P \diag(\sigma_1, ..., \sigma_J) / n_i^k$, where $P$ is the correlation matrix and $\sigma_j$ is the variance of each candidate. \citet{lewandowski2009} propose a method to generate correlation matrices uniformly over the space of all correlation matrices. We use their method, through its \textsc{Stan} implementation, and couple it with uninformative priors for the variances. This results in an uninformative prior for the covariance matrix.
+For this purpose, we decompose $\Sigma_i^k = \diag(\sigma_1, ..., \sigma_J) P \diag(\sigma_1, ..., \sigma_J) / n_i^k$, where $P$ is the correlation matrix and $\sigma_j^2$ is the variance of each candidate. \citet{lewandowski2009} propose a method to generate correlation matrices uniformly over the space of all correlation matrices. We use their method, through its \textsc{Stan} implementation, and couple it with uninformative priors for the variances. This results in an uninformative prior for the covariance matrix.
 \\
 
 %The new model can be summarised as
